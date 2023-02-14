@@ -9,28 +9,36 @@ public class BulletLogic : MonoBehaviour
     private string shooterTag;
 
     private bool unfired;
-    private Vector2 endPoint;
     private Action onUnfireComplete;
+    private float ulife;
 
-    public void Initialise(float damage, Vector2 speed, string shooterTag)
-    {
-        Initialise(damage, speed, shooterTag, false, Vector2.zero, null);
-    }
-    public void Initialise(float damage, Vector2 speed, string shooterTag, bool unfired, Vector2 endPoint, Action onUnfireComplete)
+    public void Initialise(float damage, Vector2 velocity, string shooterTag)
     {
         this.damage = damage;
-        GetComponent<Rigidbody2D>().velocity = speed;
+        GetComponent<Rigidbody2D>().velocity = velocity;
         this.shooterTag = shooterTag;
-        this.unfired = unfired;
-        this.endPoint = endPoint;
+
+        unfired = false;
+    }
+    public void Initialise(float damage, Vector2 direction, float speed, string shooterTag, Vector2 endPoint, Action onUnfireComplete)
+    {
+        this.damage = damage;
+        GetComponent<Rigidbody2D>().velocity = direction*speed;
+        this.shooterTag = shooterTag;
         this.onUnfireComplete = onUnfireComplete;
+
+        unfired = true;
+        ulife = Vector2.Distance(transform.position, endPoint) / speed;
+        Physics2D.IgnoreCollision(GetComponent<Collider2D>(), GameObject.FindGameObjectWithTag(shooterTag).GetComponent<Collider2D>());
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         if (!unfired) return;
-        if (Vector2.Distance(transform.position, endPoint) <= 0.2)
+        ulife -= Time.deltaTime;
+        if (ulife <= 0)
         {
             Destroy(gameObject);
             if (onUnfireComplete != null) onUnfireComplete();
@@ -41,7 +49,6 @@ public class BulletLogic : MonoBehaviour
     {
         if (unfired || collision.collider.CompareTag(shooterTag)) return;
 
-        Debug.Log("Bullet Hit: " + collision.collider.name);
         Destroy(gameObject);
 
         /*if (collision.collider.CompareTag("Player"))

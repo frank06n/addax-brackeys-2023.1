@@ -6,11 +6,13 @@ public class GunLogic : MonoBehaviour
 {
     public float BulletDamage;
     public float BulletSpeed;
+
     public GameObject BulletPrefab;
 
     //[SerializeField] protected string BulletFireSfx;
 
     private Transform BulletPoint;
+    [HideInInspector]
     public bool unfiring;
 
     private void Awake()
@@ -29,21 +31,18 @@ public class GunLogic : MonoBehaviour
         BulletLogic bullet = bulletObj.GetComponent<BulletLogic>();
         bullet.Initialise(BulletDamage, speed, "Player");
 
-        Debug.Log(BulletPoint.position);
-
         //SceneManager2.instance.sfxPlayer.Play(BulletFireSfx);
     }
     public void UnFireBullet()
     {
         Vector2 direction = (BulletPoint.position - transform.position).normalized;
-        RaycastHit2D pt = Physics2D.Raycast(BulletPoint.position, direction, 50, Physics2D.AllLayers, -10, 0);
+        RaycastHit2D pt = Physics2D.Raycast(BulletPoint.position, direction, 50, Physics2D.DefaultRaycastLayers, -10, 0);
         
-        Vector2 speed = -direction * BulletSpeed;
         GameObject bulletObj = Instantiate(BulletPrefab, pt.point, transform.rotation, transform);
         bulletObj.transform.parent = null;// LevelManager.instance.BulletsHolder;
 
         BulletLogic bullet = bulletObj.GetComponent<BulletLogic>();
-        bullet.Initialise(BulletDamage, speed, "Player", true, BulletPoint.position, () =>
+        bullet.Initialise(BulletDamage, -direction, BulletSpeed, "Player", BulletPoint.position, () =>
         {
             this.unfiring = false;
         });
@@ -60,7 +59,7 @@ public class GunLogic : MonoBehaviour
         LookTowards(lookAngle);
     }
 
-    protected void LookTowards(float lookAngle)
+    private void LookTowards(float lookAngle)
     {
         if (lookAngle > 180) lookAngle -= 360;
         if (lookAngle < -180) lookAngle += 360;
