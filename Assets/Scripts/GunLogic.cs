@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GunLogic : MonoBehaviour
+public class GunLogic : WeaponLogic
 {
     public float BulletDamage;
     public float BulletSpeed;
@@ -12,8 +12,7 @@ public class GunLogic : MonoBehaviour
     //[SerializeField] protected string BulletFireSfx;
 
     private Transform BulletPoint;
-    [HideInInspector]
-    public bool unfiring;
+    private bool unfiring;
 
     private void Awake()
     {
@@ -22,27 +21,27 @@ public class GunLogic : MonoBehaviour
 
     protected virtual void OnAwake() { }
 
-    public void FireBullet()
+    public override void Attack()
     {
         Vector2 speed = (BulletPoint.position - transform.position).normalized * BulletSpeed;
         GameObject bulletObj = Instantiate(BulletPrefab, BulletPoint.position, transform.rotation, transform);
         bulletObj.transform.parent = null;// LevelManager.instance.BulletsHolder;
 
         BulletLogic bullet = bulletObj.GetComponent<BulletLogic>();
-        bullet.Initialise(BulletDamage, speed, "Player");
+        bullet.Initialise(BulletDamage, speed, holder);
 
         //SceneManager2.instance.sfxPlayer.Play(BulletFireSfx);
     }
-    public void UnFireBullet()
+    public override void UnAttack()
     {
         Vector2 direction = (BulletPoint.position - transform.position).normalized;
-        RaycastHit2D pt = Physics2D.Raycast(BulletPoint.position, direction, 50, Physics2D.DefaultRaycastLayers, -10, 0);
+        RaycastHit2D pt = Physics2D.Raycast(BulletPoint.position, direction, 50, LevelManager.instance.raycastLayers, -10, 0);
         
         GameObject bulletObj = Instantiate(BulletPrefab, pt.point, transform.rotation, transform);
         bulletObj.transform.parent = null;// LevelManager.instance.BulletsHolder;
 
         BulletLogic bullet = bulletObj.GetComponent<BulletLogic>();
-        bullet.Initialise(BulletDamage, -direction, BulletSpeed, "Player", BulletPoint.position, () =>
+        bullet.Initialise(BulletDamage, -direction, BulletSpeed, holder, BulletPoint.position, () =>
         {
             this.unfiring = false;
         });
@@ -51,21 +50,8 @@ public class GunLogic : MonoBehaviour
         //SceneManager2.instance.sfxPlayer.Play(BulletFireSfx);
     }
 
-    public void LookTowards(Vector2 position, bool inverted = false)
+    public override bool RequiresPause()
     {
-        float lookAngle = Vector2.SignedAngle(Vector2.right, position - (Vector2)transform.position);
-        if (inverted) lookAngle += 180;
-
-        LookTowards(lookAngle);
-    }
-
-    private void LookTowards(float lookAngle)
-    {
-        if (lookAngle > 180) lookAngle -= 360;
-        if (lookAngle < -180) lookAngle += 360;
-        transform.rotation = Quaternion.Euler(0, 0, lookAngle);
-
-        float scaleY = (Mathf.Abs(lookAngle) <= 90) ? +1 : -1;
-        transform.localScale = new Vector3(1, scaleY, 1);
+        return unfiring;
     }
 }

@@ -5,23 +5,24 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float speed = 10.0f;
-    public Transform gunPivot;
 
     private Rigidbody2D rb;
     private SpriteRenderer sr;
+    private new Collider2D collider;
 
     private Transform holdPoint;
 
     private List<PickupLogic> pickupsAround;
 
     private PickupLogic heldObject;
-    private GunLogic gun;
+    private WeaponLogic weapon;
 
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        collider = GetComponent<Collider2D>();
         holdPoint = transform.GetChild(0);
 
         pickupsAround = new List<PickupLogic>();
@@ -29,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (gun!=null && gun.unfiring)
+        if (weapon!=null && weapon.RequiresPause())
         {
             rb.velocity = Vector2.zero;
             return;
@@ -44,33 +45,40 @@ public class PlayerMovement : MonoBehaviour
 
         if (direction.x != 0) sr.flipX = direction.x == -1;
 
-        if (gun != null)
+        if (weapon != null)
         {
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            bool inverted = sr.flipX;
-            gun.LookTowards(mousePosition, false);
+            weapon.LookTowards(mousePosition, false);
 
-            if (Input.GetMouseButtonDown(0)) gun.FireBullet();
-            if (Input.GetMouseButtonDown(1)) gun.UnFireBullet();
+            if (Input.GetMouseButtonDown(0)) weapon.Attack();
+            if (Input.GetMouseButtonDown(1)) weapon.UnAttack();
         }
 
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (this.heldObject != null)
             {
-                PickupLogic droppedPk = this.heldObject;
-                this.heldObject = null;
-                if (droppedPk.isWeapon()) this.gun = null;
-                droppedPk.onPlayerDropped(transform.position);
+                PickupLogic droppedPk = heldObject;
+                heldObject = null;
+                if (droppedPk.isWeapon())
+                {
+                    weapon.holder = null;
+                    weapon = null;
+                }
+                droppedPk.onDropped(transform.position);
             }
 
             if (pickupsAround.Count > 0)
             {
-                this.heldObject = pickupsAround[pickupsAround.Count - 1];
-                pickupsAround.Remove(this.heldObject);
+                heldObject = pickupsAround[pickupsAround.Count - 1];
+                pickupsAround.Remove(heldObject);
 
-                this.heldObject.OnPlayerPicked(holdPoint);
-                if (this.heldObject.isWeapon()) this.gun = this.heldObject.GetComponent<GunLogic>();
+                heldObject.OnPicked(holdPoint);
+                if (heldObject.isWeapon())
+                {
+                    weapon = heldObject.GetComponent<WeaponLogic>();
+                    weapon.holder = collider;
+                }
             }
         }
     }

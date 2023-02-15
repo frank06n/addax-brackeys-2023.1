@@ -14,7 +14,8 @@ public class PickupLogic : MonoBehaviour
     [SerializeField] private float HoverYChange;
     [SerializeField] private float HoverSpeed;
 
-    private float initLocalY;
+    private Vector2 initLocalPos;
+    private Vector2 initLocalScale;
     private float hoverDelta;
 
     private bool hover;
@@ -23,7 +24,8 @@ public class PickupLogic : MonoBehaviour
     private void Start()
     {
         hover = true;
-        initLocalY = transform.localPosition.y;
+        initLocalPos = transform.localPosition;
+        initLocalScale = transform.localScale;
         hoverDelta = Random.Range(0f, 2 * Mathf.PI);
     }
 
@@ -34,7 +36,7 @@ public class PickupLogic : MonoBehaviour
         {
             hoverDelta += HoverSpeed * Time.deltaTime;
             float change = Mathf.Sin(hoverDelta) * HoverYChange;
-            transform.localPosition = new Vector3(transform.localPosition.x, initLocalY + change, 0);
+            transform.localPosition = initLocalPos + Vector2.up * change;
         }
     }
 
@@ -43,18 +45,19 @@ public class PickupLogic : MonoBehaviour
         return PickupType == PType.WEAPON;
     }
 
-    public void OnPlayerPicked(Transform newParent)
+    public void OnPicked(Transform newParent)
     {
         hover = false;
         transform.parent = newParent;
         transform.localPosition = Vector3.zero;
     }
 
-    public void onPlayerDropped(Vector3 playerPos)
+    public void onDropped(Vector3 position)
     {
         transform.parent = null; // pickups_holder
-        transform.position = playerPos;
-        initLocalY = transform.localPosition.y;
+        transform.position = position;
+        initLocalPos = transform.localPosition;
+        transform.localScale = initLocalScale;
         hover = true;
         if (this.PickupType == PType.WEAPON) transform.rotation = Quaternion.identity;
     }

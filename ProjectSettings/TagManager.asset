@@ -4,10 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Wall
-  - Obstacle
   - PlayerGun
   - Pickup
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -15,9 +14,9 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Vulnerable
+  - Attacks
+  - Statics
   - 
   - 
   - 
@@ -48,11 +47,8 @@ TagManager:
   - name: Player
     uniqueID: 1340407539
     locked: 0
-  - name: Weapon
+  - name: Object
     uniqueID: 3360602503
-    locked: 0
-  - name: Held
-    uniqueID: 4273553933
     locked: 0
   - name: Bullet
     uniqueID: 3133956361

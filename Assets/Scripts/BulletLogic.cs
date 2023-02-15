@@ -6,31 +6,31 @@ using UnityEngine;
 public class BulletLogic : MonoBehaviour
 {
     private float damage;
-    private string shooterTag;
+    private Collider2D shooter;
 
     private bool unfired;
     private Action onUnfireComplete;
     private float ulife;
 
-    public void Initialise(float damage, Vector2 velocity, string shooterTag)
+    public void Initialise(float damage, Vector2 velocity, Collider2D shooter)
     {
         this.damage = damage;
         GetComponent<Rigidbody2D>().velocity = velocity;
-        this.shooterTag = shooterTag;
+        this.shooter = shooter;
 
         unfired = false;
     }
-    public void Initialise(float damage, Vector2 direction, float speed, string shooterTag, Vector2 endPoint, Action onUnfireComplete)
+    public void Initialise(float damage, Vector2 direction, float speed, Collider2D shooter, Vector2 endPoint, Action onUnfireComplete)
     {
         this.damage = damage;
-        GetComponent<Rigidbody2D>().velocity = direction*speed;
-        this.shooterTag = shooterTag;
+        GetComponent<Rigidbody2D>().velocity = direction * speed;
+        this.shooter = shooter;
         this.onUnfireComplete = onUnfireComplete;
 
         unfired = true;
         ulife = Vector2.Distance(transform.position, endPoint) / speed;
-        Physics2D.IgnoreCollision(GetComponent<Collider2D>(), GameObject.FindGameObjectWithTag(shooterTag).GetComponent<Collider2D>());
-        
+        Physics2D.IgnoreCollision(GetComponent<Collider2D>(), shooter);
+
     }
 
     // Update is called once per frame
@@ -47,7 +47,8 @@ public class BulletLogic : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (unfired || collision.collider.CompareTag(shooterTag)) return;
+        if (unfired || collision.collider.CompareTag(shooter.tag)) return;
+        Debug.Log("Bullet hit: " + collision.collider.tag);
 
         Destroy(gameObject);
 
@@ -64,5 +65,12 @@ public class BulletLogic : MonoBehaviour
             // on hitting wall
             SceneManager2.instance.sfxPlayer.Play("bullet_hit_platform");
         }*/
+    }
+
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (unfired || collider.CompareTag(shooter.tag)) return;
+        Debug.Log("Bullet hit: " + collider.tag);
+        Destroy(gameObject);
     }
 }
