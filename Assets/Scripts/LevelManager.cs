@@ -79,6 +79,8 @@ public class LevelManager : MonoBehaviour
         //    StartCoroutine(UpdateSceneForMainMenu());
         //else
         //    UpdateUI();
+
+        FindObjectOfType<AudioManager>().play("Theme"); 
     }
 
     public void AddScore(int score)

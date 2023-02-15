@@ -50,6 +50,8 @@ public class PickupLogic : MonoBehaviour
         hover = false;
         transform.parent = newParent;
         transform.localPosition = Vector3.zero;
+
+        FindObjectOfType<AudioManager>().play("Item Pick Up"); 
     }
 
     public void onDropped(Vector3 position)
@@ -60,5 +62,7 @@ public class PickupLogic : MonoBehaviour
         transform.localScale = initLocalScale;
         hover = true;
         if (this.PickupType == PType.WEAPON) transform.rotation = Quaternion.identity;
+
+        FindObjectOfType<AudioManager>().play("Item Throw");
     }
 }
