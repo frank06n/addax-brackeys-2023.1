@@ -53,3 +53,6 @@ TagManager:
   - name: Bullet
     uniqueID: 3133956361
     locked: 0
+  - name: HealthBar
+    uniqueID: 1051553647
+    locked: 0

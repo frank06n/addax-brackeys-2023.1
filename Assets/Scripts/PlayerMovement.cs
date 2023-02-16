@@ -56,6 +56,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E)) PickupObject();
         if (Input.GetKeyDown(KeyCode.F)) ThrowHeld();
+        if (Input.GetKeyDown(KeyCode.Space)) LevelManager.instance.ToggleObjectivesPanel();
     }
 
     private void ThrowHeld() {
