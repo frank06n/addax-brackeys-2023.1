@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour {
 
+    [SerializeField]
     public Sound[] sounds;
+
+    [SerializeField] private AudioMixerGroup musicMixerGroup;
+    [SerializeField] private AudioMixerGroup sfxMixerGroup;
+    
     public static AudioManager instance;
     void Awake() {
         //this makes it so that the audio doesn't continue after scene changes
@@ -20,11 +25,19 @@ public class AudioManager : MonoBehaviour {
         {
             s.source = gameObject.AddComponent<AudioSource>();
             s.source.clip = s.clip;
-
             s.source.volume = s.volume;
-            s.source.pitch = s.pitch;
-
             s.source.loop = s.loop;
+
+            switch (s.audioType)
+            {
+                case Sound.AudioTypes.sfx:
+                    s.source.outputAudioMixerGroup = sfxMixerGroup;
+                    break;
+
+                case Sound.AudioTypes.music:
+                    s.source.outputAudioMixerGroup = musicMixerGroup;
+                    break;
+            }
         }
     }
 
@@ -35,5 +48,14 @@ public class AudioManager : MonoBehaviour {
             return;
         }
         s.source.Play(); 
+    }
+
+    public void stop(string name){
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if(s == null){
+            Debug.LogWarning("Sound: " + name + " not found.");
+            return;
+        }
+        s.source.Stop();
     }
 }
