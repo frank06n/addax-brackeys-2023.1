@@ -54,32 +54,36 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetMouseButtonDown(1)) weapon.UnAttack();
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E)) PickupObject();
+        if (Input.GetKeyDown(KeyCode.F)) ThrowHeld();
+    }
+
+    private void ThrowHeld() {
+        if (this.heldObject == null) return;
+
+        PickupLogic droppedPk = heldObject;
+        heldObject = null;
+        if (droppedPk.isWeapon())
         {
-            if (this.heldObject != null)
-            {
-                PickupLogic droppedPk = heldObject;
-                heldObject = null;
-                if (droppedPk.isWeapon())
-                {
-                    weapon.holder = null;
-                    weapon = null;
-                }
-                droppedPk.onDropped(transform.position);
-            }
+            weapon.holder = null;
+            weapon = null;
+        }
+        droppedPk.onDropped(transform.position);
+    }
 
-            if (pickupsAround.Count > 0)
-            {
-                heldObject = pickupsAround[pickupsAround.Count - 1];
-                pickupsAround.Remove(heldObject);
+    private void PickupObject()
+    {
+        ThrowHeld();
+        if (pickupsAround.Count == 0) return;
 
-                heldObject.OnPicked(holdPoint);
-                if (heldObject.isWeapon())
-                {
-                    weapon = heldObject.GetComponent<WeaponLogic>();
-                    weapon.holder = collider;
-                }
-            }
+        heldObject = pickupsAround[0];
+        pickupsAround.Remove(heldObject);
+
+        heldObject.OnPicked(holdPoint);
+        if (heldObject.isWeapon())
+        {
+            weapon = heldObject.GetComponent<WeaponLogic>();
+            weapon.holder = collider;
         }
     }
 

@@ -14,6 +14,7 @@ public class PickupLogic : MonoBehaviour
     [SerializeField] private float HoverYChange;
     [SerializeField] private float HoverSpeed;
 
+    private Collider2D proximityCollider;
     private Vector2 initLocalPos;
     private Vector2 initLocalScale;
     private float hoverDelta;
@@ -21,13 +22,21 @@ public class PickupLogic : MonoBehaviour
     private bool hover;
 
 
-    private void Start()
+    private void Awake()
     {
         hover = true;
+        hoverDelta = Random.Range(0f, 2 * Mathf.PI);
+
         initLocalPos = transform.localPosition;
         initLocalScale = transform.localScale;
-        hoverDelta = Random.Range(0f, 2 * Mathf.PI);
+
+        proximityCollider = GetComponent<Collider2D>();
     }
+
+    //private void Start()
+    //{
+        
+    //}
 
     private void Update()
     {
@@ -50,6 +59,7 @@ public class PickupLogic : MonoBehaviour
         hover = false;
         transform.parent = newParent;
         transform.localPosition = Vector3.zero;
+        proximityCollider.enabled = false;
     }
 
     public void onDropped(Vector3 position)
@@ -59,6 +69,7 @@ public class PickupLogic : MonoBehaviour
         initLocalPos = transform.localPosition;
         transform.localScale = initLocalScale;
         hover = true;
+        proximityCollider.enabled = true;
         if (this.PickupType == PType.WEAPON) transform.rotation = Quaternion.identity;
     }
 }
