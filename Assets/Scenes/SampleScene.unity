@@ -671,6 +671,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: character
       objectReference: {fileID: 0}
+    - target: {fileID: 2215525740645219849, guid: dc14ad44bb957c24da0d976697d82593, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2215525740645219851, guid: dc14ad44bb957c24da0d976697d82593, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3574797088685659804, guid: dc14ad44bb957c24da0d976697d82593, type: 3}
       propertyPath: m_LocalPosition.z
       value: 1
@@ -1477,7 +1485,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2094576790
 MonoBehaviour:
   m_ObjectHideFlags: 0
