@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PickupLogic : MonoBehaviour
 {   
@@ -19,6 +17,8 @@ public class PickupLogic : MonoBehaviour
     private Vector2 initLocalScale;
     private float hoverDelta;
 
+    private SpriteRenderer sr;
+
     private bool hover;
 
 
@@ -31,12 +31,8 @@ public class PickupLogic : MonoBehaviour
         initLocalScale = transform.localScale;
 
         proximityCollider = GetComponent<Collider2D>();
+        sr = GetComponentInChildren<SpriteRenderer>();
     }
-
-    //private void Start()
-    //{
-        
-    //}
 
     private void Update()
     {
@@ -60,16 +56,18 @@ public class PickupLogic : MonoBehaviour
         transform.parent = newParent;
         transform.localPosition = Vector3.zero;
         proximityCollider.enabled = false;
+        this.sr.sortingLayerName = "Held";
     }
 
-    public void onDropped(Vector3 position)
+    public void OnDropped(Vector3 position)
     {
-        transform.parent = null; // pickups_holder
+        transform.parent = LevelManager.instance.pickupsHolder;
         transform.position = position;
         initLocalPos = transform.localPosition;
         transform.localScale = initLocalScale;
         hover = true;
         proximityCollider.enabled = true;
         if (this.PickupType == PType.WEAPON) transform.rotation = Quaternion.identity;
+        this.sr.sortingLayerName = "Entities";
     }
 }

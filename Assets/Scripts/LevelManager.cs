@@ -1,14 +1,12 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
 
     public LayerMask raycastLayers;
+    public Transform pickupsHolder;
 
     [Header("UI Elements")]
 
@@ -27,7 +25,7 @@ public class LevelManager : MonoBehaviour
 
         panelObjs_Animating = false;
         panelObjs_Visible = false;
-}
+    }
 
     public void ToggleObjectivesPanel()
     {

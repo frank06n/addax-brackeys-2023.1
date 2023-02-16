@@ -41,13 +41,16 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 3284078833
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Player
+  - name: Entities
     uniqueID: 1340407539
     locked: 0
-  - name: Object
+  - name: Held
     uniqueID: 3360602503
     locked: 0
   - name: Bullet
