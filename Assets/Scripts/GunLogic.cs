@@ -7,8 +7,6 @@ public class GunLogic : WeaponLogic
 
     public GameObject BulletPrefab;
 
-    [SerializeField] protected string BulletFireSfx;
-
     private Transform BulletPoint;
     private bool unfiring;
 

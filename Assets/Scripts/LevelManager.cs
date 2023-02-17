@@ -33,6 +33,11 @@ public class LevelManager : MonoBehaviour
         LAYER_VULNERABLE = LayerMask.NameToLayer("Vulnerable");
     }
 
+    private void Start()
+    {
+        FindObjectOfType<AudioManager>().play("Theme");
+    }
+
     public void ToggleObjectivesPanel()
     {
         if (panelObjs_Animating) return;
