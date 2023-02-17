@@ -12,7 +12,7 @@ public class AudioManager : MonoBehaviour {
     
     public static AudioManager instance;
     void Awake() {
-        //this makes it so that the audio doesn't continue after scene changes
+        //if-statement below makes it so that the audio doesn't continue after scene changes
         //safe to remove if undesireable 
         if(instance == null){
             instance = this;
