@@ -33,8 +33,9 @@ public class GunLogic : WeaponLogic
     public override void UnAttack()
     {
         Vector2 direction = (BulletPoint.position - transform.position).normalized;
-        RaycastHit2D pt = Physics2D.Raycast(BulletPoint.position, direction, 50, LevelManager.instance.raycastLayers, -10, 0);
-        
+        //RaycastHit2D pt = Physics2D.Raycast(BulletPoint.position, direction, 50, LevelManager.instance.raycastLayers, -10, 0);
+        RaycastHit2D pt = LevelManager.instance.UnFireRaycast(BulletPoint.position, direction, holder.tag);
+
         GameObject bulletObj = Instantiate(BulletPrefab, pt.point, transform.rotation, transform);
         bulletObj.transform.parent = null;// LevelManager.instance.BulletsHolder;
 

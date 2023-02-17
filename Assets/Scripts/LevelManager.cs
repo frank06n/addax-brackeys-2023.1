@@ -5,8 +5,10 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
 
-    public LayerMask raycastLayers;
     public Transform pickupsHolder;
+    [SerializeField] private LayerMask raycastLayers;
+    private readonly int[] raycastMinDepths = { 0, -5 };
+    private readonly int[] raycastMaxDepths = { 5,  0 };
 
     [Header("UI Elements")]
 
@@ -16,7 +18,6 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private RectTransform playerHealthFill;
 
-    //public HealthBarScript hbs;
     void Awake()
     {
         if (instance != null) Destroy(gameObject);
@@ -37,6 +38,13 @@ public class LevelManager : MonoBehaviour
     {
         return panelObjs_Visible;
     } 
+
+    public RaycastHit2D UnFireRaycast(Vector2 origin, Vector2 direction, string shooterTag)
+    {
+        int i = shooterTag == "Player" ? 0 : 1;
+        return Physics2D.Raycast(origin, direction, 50,
+            raycastLayers, raycastMinDepths[i], raycastMaxDepths[i]);
+    }
 
     private IEnumerator AnimateObjectivesPanel(bool show)
     {
