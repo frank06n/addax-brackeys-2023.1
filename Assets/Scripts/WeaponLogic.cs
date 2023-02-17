@@ -1,5 +1,10 @@
 using UnityEngine;
 
+public enum WeaponType
+{
+    MELEE, RANGED
+} 
+
 public abstract class WeaponLogic : MonoBehaviour
 {
     private Collider2D _holder; 
@@ -15,6 +20,7 @@ public abstract class WeaponLogic : MonoBehaviour
     
     public abstract void Attack();
     public abstract void UnAttack();
+    public abstract WeaponType GetWeaponType();
 
     public virtual bool RequiresPause() { return false; }
     protected virtual void OnHolderChanged(Collider2D old, Collider2D newt) { }

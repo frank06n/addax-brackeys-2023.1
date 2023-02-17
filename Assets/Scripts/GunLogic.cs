@@ -53,4 +53,9 @@ public class GunLogic : WeaponLogic
     {
         return unfiring;
     }
+
+    public override WeaponType GetWeaponType()
+    {
+        return WeaponType.RANGED;
+    }
 }

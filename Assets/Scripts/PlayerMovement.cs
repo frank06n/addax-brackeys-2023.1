@@ -40,6 +40,13 @@ public class PlayerMovement : CharacterScript
         // do a camera effect
     }
     
+    public override void TakeDamage(float damage)
+    {
+        health -= damage;
+        if (health <= 0) health = 0;
+        LevelManager.instance.SetPlayerHealthFill(health / maxHealth);
+    }
+
     private void PickupObject()
     {
         ThrowHeld();

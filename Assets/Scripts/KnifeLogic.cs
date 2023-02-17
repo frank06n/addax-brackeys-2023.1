@@ -20,10 +20,6 @@ public class KnifeLogic : WeaponLogic
         attackPoint.gameObject.SetActive(false);
     }
 
-    protected override void OnHolderChanged(Collider2D old, Collider2D newt) {
-
-    }
-
     public override void Attack()
     {
         if (attacking) return;
@@ -54,5 +50,10 @@ public class KnifeLogic : WeaponLogic
         if (holder!=null) transform.localPosition = initPos;
         attackPoint.SetEnabled(mholder, false);
         this.attacking = false;
+    }
+
+    public override WeaponType GetWeaponType()
+    {
+        return WeaponType.RANGED;
     }
 }

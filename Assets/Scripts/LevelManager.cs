@@ -10,6 +10,9 @@ public class LevelManager : MonoBehaviour
     private readonly int[] raycastMinDepths = { 0, -5 };
     private readonly int[] raycastMaxDepths = { 5,  0 };
 
+    public Transform player;
+    [HideInInspector] public int LAYER_VULNERABLE;
+
     [Header("UI Elements")]
 
     [SerializeField] private RectTransform panelObjs; // Objectives Panel
@@ -26,6 +29,8 @@ public class LevelManager : MonoBehaviour
 
         panelObjs_Animating = false;
         panelObjs_Visible = false;
+
+        LAYER_VULNERABLE = LayerMask.NameToLayer("Vulnerable");
     }
 
     public void ToggleObjectivesPanel()
