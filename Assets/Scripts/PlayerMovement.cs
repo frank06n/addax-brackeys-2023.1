@@ -4,11 +4,13 @@ using UnityEngine;
 public class PlayerMovement : CharacterScript
 {
     private List<PickupLogic> pickupsAround;
+    private bool furnaceAround;
 
     protected override void Awake()
     {
         base.Awake();
         pickupsAround = new List<PickupLogic>();
+        furnaceAround = false;
     }
 
     protected override void OnUpdate()
@@ -24,7 +26,9 @@ public class PlayerMovement : CharacterScript
 
         if (Input.GetKeyDown(KeyCode.E)) PickupObject();
         if (Input.GetKeyDown(KeyCode.F)) ThrowHeld();
-        if (Input.GetKeyDown(KeyCode.Space)) LevelManager.instance.ToggleObjectivesPanel();
+        if (Input.GetKeyDown(KeyCode.LeftShift)) LevelManager.instance.ToggleObjectivesPanel();
+        if (Input.GetKeyDown(KeyCode.Space) && furnaceAround)
+            LevelManager.instance.FurnaceInteract();
     }
     protected override Vector2 GetBaseVelocity()
     {
@@ -59,12 +63,20 @@ public class PlayerMovement : CharacterScript
         {
             pickupsAround.Add(collision.gameObject.GetComponent<PickupLogic>());
         }
+        if (collision.CompareTag("Furnace"))
+        {
+            furnaceAround = true;
+        }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Pickup"))
         {
             pickupsAround.Remove(collision.gameObject.GetComponent<PickupLogic>());
+        }
+        if (collision.CompareTag("Furnace"))
+        {
+            furnaceAround = false;
         }
     }
 }

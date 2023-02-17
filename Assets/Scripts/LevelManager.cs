@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour
     private readonly int[] raycastMaxDepths = { 5,  0 };
 
     public Transform player;
+    [SerializeField] private FurnaceLogic furnace;
     [HideInInspector] public int LAYER_VULNERABLE;
 
     [Header("UI Elements")]
@@ -80,5 +81,13 @@ public class LevelManager : MonoBehaviour
         playerHealthFill.localScale = new Vector3(fill, 1, 1);
         float width = playerHealthFill.rect.width;
         playerHealthFill.anchoredPosition = new Vector2(width * fill / 2, 0);
+    }
+
+    public void FurnaceInteract()
+    {
+        if (this.furnace)
+        {
+            this.furnace.NextState();
+        }
     }
 }
