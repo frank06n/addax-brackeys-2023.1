@@ -417,6 +417,7 @@ MonoBehaviour:
   player: {fileID: 2094576794}
   furnace: {fileID: 1952451568}
   LAYER_VULNERABLE: 0
+  audioPlayer: {fileID: 695007887}
   panelObjs: {fileID: 992243581}
   playerHealthFill: {fileID: 8102015507672855218}
 --- !u!4 &125805345
@@ -1220,6 +1221,17 @@ SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 1744626562527939632, guid: 637d77553865e5a40a1fb29dba738bf7, type: 3}
   m_PrefabInstance: {fileID: 599862099}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &695007887 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1833608374456447969, guid: 6efe5052f5e6283408d55d28d2ff37d3, type: 3}
+  m_PrefabInstance: {fileID: 1155936447}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6f83620b151ed340bd4b90a12be481f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &730160601
 GameObject:
   m_ObjectHideFlags: 0
@@ -1237,7 +1249,7 @@ GameObject:
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &730160602
 MonoBehaviour:
   m_ObjectHideFlags: 0

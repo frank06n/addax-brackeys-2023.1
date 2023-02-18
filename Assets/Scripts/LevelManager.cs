@@ -14,6 +14,8 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private FurnaceLogic furnace;
     [HideInInspector] public int LAYER_VULNERABLE;
 
+    public AudioManager audioPlayer;
+
     [Header("UI Elements")]
 
     [SerializeField] private RectTransform panelObjs; // Objectives Panel
@@ -36,7 +38,7 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        FindObjectOfType<AudioManager>().play("Theme");
+        audioPlayer.play("music_training");
     }
 
     public void ToggleObjectivesPanel()

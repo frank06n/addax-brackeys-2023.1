@@ -57,7 +57,7 @@ public class PickupLogic : MonoBehaviour
         transform.localPosition = Vector3.zero;
         proximityCollider.enabled = false;
         this.sr.sortingLayerName = "Held";
-        FindObjectOfType<AudioManager>().play("Item Pick Up"); 
+        LevelManager.instance.audioPlayer.play("sfx_item_pick");
     }
 
     public void OnDropped(Vector3 position)
@@ -70,6 +70,6 @@ public class PickupLogic : MonoBehaviour
         proximityCollider.enabled = true;
         if (this.PickupType == PType.WEAPON) transform.rotation = Quaternion.identity;
         this.sr.sortingLayerName = "Entities";
-        FindObjectOfType<AudioManager>().play("Item Throw");
+        LevelManager.instance.audioPlayer.play("sfx_item_throw");
     }
 }
