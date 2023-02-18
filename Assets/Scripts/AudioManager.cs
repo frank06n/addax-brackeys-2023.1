@@ -1,6 +1,24 @@
-using UnityEngine.Audio;
 using System;
 using UnityEngine;
+using UnityEngine.Audio;
+
+
+[System.Serializable]
+public class Sound
+{
+    public enum AudioTypes { sfx, music }
+    public AudioTypes audioType;
+
+    public AudioClip clip;
+
+    [Range(0f, 1f)]
+    public float volume;
+
+    public bool loop;
+
+    [HideInInspector]
+    public AudioSource source;
+}
 
 public class AudioManager : MonoBehaviour {
 
@@ -9,12 +27,13 @@ public class AudioManager : MonoBehaviour {
 
     [SerializeField] private AudioMixerGroup musicMixerGroup;
     [SerializeField] private AudioMixerGroup sfxMixerGroup;
+
+    private bool ready = false;
     
     public static AudioManager instance;
     void Awake() {
-        //if-statement below makes it so that the audio doesn't continue after scene changes
-        //safe to remove if undesireable 
-        if(instance == null){
+        
+        if(instance == null) {
             instance = this;
         } else {
             Destroy(gameObject);
@@ -39,23 +58,33 @@ public class AudioManager : MonoBehaviour {
                     break;
             }
         }
+
+        ready = true;
     }
 
-    public void play (string name) {
-        Sound s = Array.Find(sounds, sound => sound.name == name);
-        if(s == null || s.source == null) {
-            Debug.LogWarning("Sound: " + name + " not found.");
-            return;
-        }
-        s.source.Play(); 
+    private AudioSource GetSource(string name)
+    {
+        if (!ready) return null;
+        
+        Sound s = Array.Find(sounds, sound => sound.clip.name == name);
+        if (s == null) throw new ArgumentException("Sound: " + name + " not found.");
+        return s.source;
     }
 
-    public void stop(string name){
-        Sound s = Array.Find(sounds, sound => sound.name == name);
-        if(s == null){
-            Debug.LogWarning("Sound: " + name + " not found.");
-            return;
-        }
-        s.source.Stop();
+    public void Play(string name) {
+        AudioSource s = GetSource(name);
+        if (s) s.Play();
+    }
+
+    public void Stop(string name)
+    {
+        AudioSource s = GetSource(name);
+        if (s) s.Stop();
+    }
+
+    public float Length(string name)
+    {
+        AudioSource s = GetSource(name);
+        return s ? s.clip.length : 0f;
     }
 }

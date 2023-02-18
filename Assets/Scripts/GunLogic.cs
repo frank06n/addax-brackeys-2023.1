@@ -1,9 +1,16 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class GunLogic : WeaponLogic
 {
     public float BulletDamage;
     public float BulletSpeed;
+
+    private int Ammo;
+    [SerializeField] private int MaxAmmo;
+
+    public Action<int, int> OnAmmoUpdate;
+    
 
     public GameObject BulletPrefab;
 
@@ -13,38 +20,48 @@ public class GunLogic : WeaponLogic
     private void Awake()
     {
         BulletPoint = transform.GetChild(1);
+        Ammo = MaxAmmo;
     }
 
-    protected virtual void OnAwake() { }
-
-    public override void Attack()
+    protected override void _Attack()
     {
+        if (MaxAmmo != -1 && Ammo==0)
+        {
+            LevelManager.instance.ShowHint("Cant Shoot! No Ammo!");
+            // empty gun sound
+            return;
+        }
+
         Vector2 speed = (BulletPoint.position - transform.position).normalized * BulletSpeed;
         GameObject bulletObj = Instantiate(BulletPrefab, BulletPoint.position, transform.rotation, transform);
-        bulletObj.transform.parent = null;// LevelManager.instance.BulletsHolder;
+        bulletObj.transform.parent = LevelManager.instance.bulletsHolder;
 
         BulletLogic bullet = bulletObj.GetComponent<BulletLogic>();
         bullet.Initialise(BulletDamage, speed, holder);
 
-        FindObjectOfType<AudioManager>().play("Shoot");
+        if (OnAmmoUpdate != null) OnAmmoUpdate(--Ammo, MaxAmmo);
     }
-    public override void UnAttack()
+    protected override void _UnAttack()
     {
+        if (MaxAmmo != -1 && Ammo == MaxAmmo)
+        {
+            LevelManager.instance.ShowHint("Your gun is full!");
+            // full gun sound
+            return;
+        }
+
         Vector2 direction = (BulletPoint.position - transform.position).normalized;
-        //RaycastHit2D pt = Physics2D.Raycast(BulletPoint.position, direction, 50, LevelManager.instance.raycastLayers, -10, 0);
         RaycastHit2D pt = LevelManager.instance.UnFireRaycast(BulletPoint.position, direction, holder.tag);
 
         GameObject bulletObj = Instantiate(BulletPrefab, pt.point, transform.rotation, transform);
-        bulletObj.transform.parent = null;// LevelManager.instance.BulletsHolder;
+        bulletObj.transform.parent = LevelManager.instance.bulletsHolder;
 
         BulletLogic bullet = bulletObj.GetComponent<BulletLogic>();
-        bullet.Initialise(BulletDamage, -direction, BulletSpeed, holder, BulletPoint.position, () =>
-        {
-            this.unfiring = false;
-        });
-        this.unfiring = true;
+        bullet.Initialise(BulletDamage, -direction, BulletSpeed, holder, BulletPoint.position, () => unfiring = false, pt.collider);
+        unfiring = true;
+        StartCoroutine(PlayUnAttackSfx(bullet.GetLifetime()));
 
-        //SceneManager2.instance.sfxPlayer.Play(BulletFireSfx);
+        if (OnAmmoUpdate != null) OnAmmoUpdate(++Ammo, MaxAmmo);
     }
 
     public override bool RequiresPause()

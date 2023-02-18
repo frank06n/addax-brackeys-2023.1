@@ -5,6 +5,7 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
 
+    public Transform bulletsHolder;
     public Transform pickupsHolder;
     [SerializeField] private LayerMask raycastLayers;
     private readonly int[] raycastMinDepths = { 0, -5 };
@@ -14,11 +15,20 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private FurnaceLogic furnace;
     [HideInInspector] public int LAYER_VULNERABLE;
 
+    public AudioManager audioPlayer;
+
+
+
+    [SerializeField] private bool reverse;
+
+
+
     [Header("UI Elements")]
 
-    [SerializeField] private RectTransform panelObjs; // Objectives Panel
-    private bool panelObjs_Animating;
-    private bool panelObjs_Visible;
+    private ObjectivesHandler objsHandler;
+    private HintHandler hintHandler;
+    private TimerHandler timerHandler;
+    private AmmoDisplayHandler ammoDisplay;
 
     [SerializeField] private RectTransform playerHealthFill;
 
@@ -28,52 +38,46 @@ public class LevelManager : MonoBehaviour
 
         instance = this;
 
-        panelObjs_Animating = false;
-        panelObjs_Visible = false;
+        objsHandler = FindObjectOfType<ObjectivesHandler>();
+        hintHandler = FindObjectOfType<HintHandler>();
+        timerHandler = FindObjectOfType<TimerHandler>();
+        ammoDisplay = FindObjectOfType<AmmoDisplayHandler>();
 
         LAYER_VULNERABLE = LayerMask.NameToLayer("Vulnerable");
     }
 
     private void Start()
     {
-        FindObjectOfType<AudioManager>().play("Theme");
+        audioPlayer.Play("music_training");
+        ShowHint("Play this game properly");
+        timerHandler.time = 100;
     }
 
     public void ToggleObjectivesPanel()
     {
-        if (panelObjs_Animating) return;
-        StartCoroutine(AnimateObjectivesPanel(!panelObjs_Visible));
+        objsHandler.Toggle();
     }
 
-    public bool IsObjectivesPanelVisible()
+    public void ShowHint(string text, float duration=3f)
     {
-        return panelObjs_Visible;
-    } 
+        hintHandler.ShowHint(text, duration);
+    }
+
+    public void SetAmmoGun(GunLogic gun)
+    {
+        ammoDisplay.SetGun(gun);
+    }
+
+    public void ShowAmmo(bool show)
+    {
+        ammoDisplay.gameObject.SetActive(show);
+    }
 
     public RaycastHit2D UnFireRaycast(Vector2 origin, Vector2 direction, string shooterTag)
     {
         int i = shooterTag == "Player" ? 0 : 1;
         return Physics2D.Raycast(origin, direction, 50,
             raycastLayers, raycastMinDepths[i], raycastMaxDepths[i]);
-    }
-
-    private IEnumerator AnimateObjectivesPanel(bool show)
-    {
-        panelObjs_Animating = true;
-        float animProgress = 0f;
-
-        const float ANIM_DURATION = 0.25f;
-        float PANEL_Y = panelObjs.anchoredPosition.y;
-
-        while (animProgress <= 1f)
-        {
-            float x = show ? Mathf.Lerp(300, -10, animProgress) : Mathf.Lerp(-10, 300, animProgress);
-            panelObjs.anchoredPosition = new Vector2(x, PANEL_Y);
-            animProgress += Time.deltaTime / ANIM_DURATION;
-            yield return null;
-        }
-        panelObjs_Animating = false;
-        panelObjs_Visible = show;
     }
     
     public void SetPlayerHealthFill(float fill)
@@ -83,11 +87,27 @@ public class LevelManager : MonoBehaviour
         playerHealthFill.anchoredPosition = new Vector2(width * fill / 2, 0);
     }
 
+    public FurnaceState GetFurnaceState()
+    {
+        return furnace.GetState();
+    }
+
     public void FurnaceInteract()
     {
-        if (this.furnace)
-        {
-            this.furnace.NextState();
-        }
+        if (!furnace) return;
+        if (reverse)
+            furnace.PrevState();
+        else
+            furnace.NextState();
+    }
+
+    public bool IsReverse()
+    {
+        return reverse;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R)) reverse = !reverse;
     }
 }

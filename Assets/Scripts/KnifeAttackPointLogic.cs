@@ -23,6 +23,6 @@ public class KnifeAttackPointLogic : MonoBehaviour
         {
             collision.GetComponentInParent<CharacterScript>().TakeDamage(10);
         }
-        Debug.Log("Knife hit: " + collision.transform.parent.name);
+        //Debug.Log("Knife hit: " + collision.transform.parent.name);
     }
 }

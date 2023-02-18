@@ -34,8 +34,8 @@ public class HealthBarScript : MonoBehaviour
         if (visibility == HealthBarVisibility.AUTO)
         {
             lastValueUpdate += Time.deltaTime;
-            if (Fill.localScale.x > .2f)
-                alpha = 1f - Mathf.Clamp01(lastValueUpdate - 1);
+            //if (Fill.localScale.x > .2f)
+            alpha = 1f - Mathf.Clamp01(lastValueUpdate - 1);
         }
 
         Color bcol = BackRndr.color;
