@@ -27,6 +27,8 @@ public class LevelManager : MonoBehaviour
 
     private ObjectivesHandler objsHandler;
     private HintHandler hintHandler;
+    private TimerHandler timerHandler;
+    private AmmoDisplayHandler ammoDisplay;
 
     [SerializeField] private RectTransform playerHealthFill;
 
@@ -38,6 +40,8 @@ public class LevelManager : MonoBehaviour
 
         objsHandler = FindObjectOfType<ObjectivesHandler>();
         hintHandler = FindObjectOfType<HintHandler>();
+        timerHandler = FindObjectOfType<TimerHandler>();
+        ammoDisplay = FindObjectOfType<AmmoDisplayHandler>();
 
         LAYER_VULNERABLE = LayerMask.NameToLayer("Vulnerable");
     }
@@ -45,6 +49,8 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         audioPlayer.Play("music_training");
+        ShowHint("Play this game properly");
+        timerHandler.time = 100;
     }
 
     public void ToggleObjectivesPanel()
@@ -55,6 +61,16 @@ public class LevelManager : MonoBehaviour
     public void ShowHint(string text, float duration=3f)
     {
         hintHandler.ShowHint(text, duration);
+    }
+
+    public void SetAmmoGun(GunLogic gun)
+    {
+        ammoDisplay.SetGun(gun);
+    }
+
+    public void ShowAmmo(bool show)
+    {
+        ammoDisplay.gameObject.SetActive(show);
     }
 
     public RaycastHit2D UnFireRaycast(Vector2 origin, Vector2 direction, string shooterTag)

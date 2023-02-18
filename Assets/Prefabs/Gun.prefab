@@ -52,6 +52,7 @@ MonoBehaviour:
   unAttackSfx: rsfx_shoot
   BulletDamage: 10
   BulletSpeed: 15
+  MaxAmmo: 256
   BulletPrefab: {fileID: 2717687023082620174, guid: e81abc4640c7bcd45a7dffcc2ebf339a, type: 3}
 --- !u!61 &1681273948
 BoxCollider2D:
@@ -92,9 +93,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PickupType: 1
-  Value: 0
-  HoverYChange: 0
-  HoverSpeed: 2
 --- !u!1 &3037198126294465346
 GameObject:
   m_ObjectHideFlags: 0
