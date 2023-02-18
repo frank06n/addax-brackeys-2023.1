@@ -1,264 +1,93 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
 
+    public Transform pickupsHolder;
+    [SerializeField] private LayerMask raycastLayers;
+    private readonly int[] raycastMinDepths = { 0, -5 };
+    private readonly int[] raycastMaxDepths = { 5,  0 };
 
-    public LayerMask raycastLayers;
+    public Transform player;
+    [SerializeField] private FurnaceLogic furnace;
+    [HideInInspector] public int LAYER_VULNERABLE;
 
-    //private int LevelNumber;
+    [Header("UI Elements")]
 
-    //[Header("UI Elements")]
-    //[SerializeField] private TextMeshProUGUI scoreText;
-    //[SerializeField] private TextMeshProUGUI memoryText;
-    //[SerializeField] private TextMeshProUGUI timeText;
+    [SerializeField] private RectTransform panelObjs; // Objectives Panel
+    private bool panelObjs_Animating;
+    private bool panelObjs_Visible;
 
-    //[SerializeField] private GameObject uiPanel;
-    //[SerializeField] private GameObject textEsc;
+    [SerializeField] private RectTransform playerHealthFill;
 
-    //[SerializeField] private GameObject changePanel;
-    //[SerializeField] private TextMeshProUGUI levelText;
-    //[SerializeField] private TextMeshProUGUI statusText;
-
-    //[SerializeField] private Button resumeLevel;
-    //[SerializeField] private Button nextLevel;
-
-    //[Header("Other Elements")]
-    //public Transform BulletsHolder;
-    //[SerializeField] private Vector2 LoadedChunkDistance;
-
-    //[HideInInspector] public PlayerLogic player;
-    //private int score;
-    //private int memoryCollected;
-    //private float time;
-
-    //[HideInInspector] public int memoryCount;
-
-
-    //[HideInInspector] public bool gameIsOver;
-    //[HideInInspector] public bool gameWon;
-    //[HideInInspector] public bool gameIsPaused;
-
-    //public HealthBarScript hbs;
     void Awake()
     {
         if (instance != null) Destroy(gameObject);
 
         instance = this;
 
-        //player = FindObjectOfType<PlayerLogic>();
-        //score = 0;
-        //memoryCollected = 0;
-        //memoryCount = 0;
-        //time = 0;
+        panelObjs_Animating = false;
+        panelObjs_Visible = false;
 
-        //gameIsOver = false;
-        //gameWon = false;
-        //gameIsPaused = false;
-
-        //string sceneName = SceneManager2.instance.GetActiveSceneName();
-        //if (sceneName.StartsWith("Level ")) {
-        //    LevelNumber = int.Parse(sceneName.Substring(6));
-        //}
-        //else
-        //{
-        //    LevelNumber = 1;
-        //    Debug.LogWarning("Scene name for this Level is not correctly formatted");
-        //}
+        LAYER_VULNERABLE = LayerMask.NameToLayer("Vulnerable");
     }
-
 
     private void Start()
     {
-        //if (SceneManager2.instance.buildIndex == 0)
-        //    StartCoroutine(UpdateSceneForMainMenu());
-        //else
-        //    UpdateUI();
-
-        FindObjectOfType<AudioManager>().play("Theme"); 
+        FindObjectOfType<AudioManager>().play("Theme");
     }
 
-    public void AddScore(int score)
+    public void ToggleObjectivesPanel()
     {
-        //this.score += score;
-        //UpdateUI();
+        if (panelObjs_Animating) return;
+        StartCoroutine(AnimateObjectivesPanel(!panelObjs_Visible));
     }
 
-    public void AddMemory()
+    public bool IsObjectivesPanelVisible()
     {
-        //memoryCollected++;
-        //UpdateUI();
+        return panelObjs_Visible;
+    } 
 
-        //if (memoryCollected==memoryCount) GameOver(true);
-    }
-
-    public void GameOver(bool won) {
-        //gameIsOver = true;
-        //gameWon = won;
-
-        //player.Freeze();
-
-        //SceneManager2.instance.musicPlayer.FadeOut();
-        //SaveProgress();
-        //if (won)
-        //{
-        //    SceneManager2.instance.sfxPlayer.Play("player_victory");
-        //    DisplayPanel(true, "You won the level! :)");
-        //}
-        //else
-        //{
-        //    SceneManager2.instance.sfxPlayer.Play("player_lose");
-        //    DisplayPanel(true, "You lost the level! :(");
-        //}
-    }
-
-    private void DisplayPanel(bool show, string status="")
+    public RaycastHit2D UnFireRaycast(Vector2 origin, Vector2 direction, string shooterTag)
     {
-        //if (show)
-        //{
-        //    levelText.text = $"Level {LevelNumber:00}";
-        //    statusText.text = status;
-
-        //    if (!status.Equals("Game is Paused!"))
-        //    {
-        //        resumeLevel.interactable = false;
-        //    }
-
-        //    nextLevel.interactable = IsLevelComplete();
-        //}
-        //changePanel.SetActive(show);
-        //uiPanel.SetActive(!show);
-        //textEsc.SetActive(!show);
+        int i = shooterTag == "Player" ? 0 : 1;
+        return Physics2D.Raycast(origin, direction, 50,
+            raycastLayers, raycastMinDepths[i], raycastMaxDepths[i]);
     }
 
-    private void UpdateUI()
+    private IEnumerator AnimateObjectivesPanel(bool show)
     {
-        //if (uiPanel == null) return;
-        //scoreText.text = $"Score: {score:0000}";
-        //memoryText.text = $"Memories: {memoryCollected}/{memoryCount}";
+        panelObjs_Animating = true;
+        float animProgress = 0f;
 
-        //int secs = (int)time % 60;
-        //int mins = (int)time / 60;
+        const float ANIM_DURATION = 0.25f;
+        float PANEL_Y = panelObjs.anchoredPosition.y;
 
-        //timeText.text = $"Time: {mins:00}:{secs:00}";
+        while (animProgress <= 1f)
+        {
+            float x = show ? Mathf.Lerp(300, -10, animProgress) : Mathf.Lerp(-10, 300, animProgress);
+            panelObjs.anchoredPosition = new Vector2(x, PANEL_Y);
+            animProgress += Time.deltaTime / ANIM_DURATION;
+            yield return null;
+        }
+        panelObjs_Animating = false;
+        panelObjs_Visible = show;
     }
-
-    private void SaveProgress()
+    
+    public void SetPlayerHealthFill(float fill)
     {
-        //string completed = PlayerPrefs.GetString($"level{LevelNumber}_completed", "false");
-        //int minTime = PlayerPrefs.GetInt($"level{LevelNumber}_minTime", -1);
-        //int maxScore = PlayerPrefs.GetInt($"level{LevelNumber}_maxScore", 0);
-        //int highestUnlockedLevel = PlayerPrefs.GetInt("highestUnlockedLevel", 1);
-
-        //if (gameWon)
-        //{
-        //    completed = "true";
-
-        //    if (minTime == -1) minTime = (int)time;
-        //    else minTime = Mathf.Min(minTime, (int)time);
-
-        //    maxScore = Mathf.Max(maxScore, score);
-
-        //    highestUnlockedLevel = Mathf.Max(highestUnlockedLevel, LevelNumber+1);
-        //}
-
-        //PlayerPrefs.SetString($"level{LevelNumber}_completed", completed);
-        //PlayerPrefs.SetInt($"level{LevelNumber}_minTime", minTime);
-        //PlayerPrefs.SetInt($"level{LevelNumber}_maxScore", maxScore);
-        //PlayerPrefs.SetInt("highestUnlockedLevel", highestUnlockedLevel);
-        //PlayerPrefs.Save();
+        playerHealthFill.localScale = new Vector3(fill, 1, 1);
+        float width = playerHealthFill.rect.width;
+        playerHealthFill.anchoredPosition = new Vector2(width * fill / 2, 0);
     }
 
-    //public bool IsInLoadedChunks(Vector2 point)
-    //{
-    //Vector2 playerpos = player.transform.position;
-    //float x1 = playerpos.x - LoadedChunkDistance.x;
-    //float x2 = playerpos.x + LoadedChunkDistance.x;
-    //float y1 = playerpos.y - LoadedChunkDistance.y;
-    //float y2 = playerpos.y + LoadedChunkDistance.y;
-
-    //return (x1 <= point.x && point.x <= x2) && (y1 <= point.y && point.y <= y2);
-    //}
-
-
-    //private bool IsLevelComplete()
-    //{
-    //    return PlayerPrefs.GetString($"level{LevelNumber}_completed", "false").Equals("true");
-    //}
-
-
-    public void TogglePauseState()
+    public void FurnaceInteract()
     {
-        //if (gameIsPaused)
-        //{
-        //    DisplayPanel(false);
-        //    SceneManager2.instance.sfxPlayer.Resume();
-        //    Time.timeScale = 1;
-        //}
-        //else
-        //{
-        //    DisplayPanel(true, "Game is Paused!");
-        //    SceneManager2.instance.sfxPlayer.Pause();
-        //    Time.timeScale = 0;
-        //}
-        //gameIsPaused = !gameIsPaused;
+        if (this.furnace)
+        {
+            this.furnace.NextState();
+        }
     }
-
-    public void RetryLevel()
-    {
-        //Time.timeScale = 1;
-        //player.Freeze();
-        //SceneManager2.instance.LoadScene(SceneManager2.instance.buildIndex);
-    }
-
-    public void GoToLevels()
-    {
-        //Time.timeScale = 1;
-        //player.Freeze();
-        //SceneManager2.instance.LoadScene(1);
-    }
-
-    public void NextLevel()
-    {
-        //Time.timeScale = 1;
-        //player.Freeze();
-        //SceneManager2.instance.LoadScene(SceneManager2.instance.buildIndex+1);
-    }
-
-    private void Update()
-    {
-        //if (SceneManager2.instance.buildIndex==0)
-        //{
-        //    if (Input.GetKeyDown(KeyCode.P))
-        //    {
-        //        SceneManager2.instance.LoadScene(1);
-        //    }
-        //    else if (Input.GetKeyDown(KeyCode.Q))
-        //    {
-        //        SceneManager2.instance.Quit();
-        //    }
-        //    return;
-        //}
-
-        //if (gameIsOver) return;
-
-        //time += Time.deltaTime;
-        //UpdateUI();
-
-        //if (Input.GetKeyDown(KeyCode.Escape)) TogglePauseState();
-    }
-
-    //private IEnumerator UpdateSceneForMainMenu()
-    //{
-    //    while (true)
-    //    {
-    //        yield return new WaitForSeconds(10f);
-    //        player.ResetHealth();
-    //    }
-    //}
 }

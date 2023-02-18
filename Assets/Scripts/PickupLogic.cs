@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PickupLogic : MonoBehaviour
 {   
@@ -14,19 +12,26 @@ public class PickupLogic : MonoBehaviour
     [SerializeField] private float HoverYChange;
     [SerializeField] private float HoverSpeed;
 
+    private Collider2D proximityCollider;
     private Vector2 initLocalPos;
     private Vector2 initLocalScale;
     private float hoverDelta;
 
+    private SpriteRenderer sr;
+
     private bool hover;
 
 
-    private void Start()
+    private void Awake()
     {
         hover = true;
+        hoverDelta = Random.Range(0f, 2 * Mathf.PI);
+
         initLocalPos = transform.localPosition;
         initLocalScale = transform.localScale;
-        hoverDelta = Random.Range(0f, 2 * Mathf.PI);
+
+        proximityCollider = GetComponent<Collider2D>();
+        sr = GetComponentInChildren<SpriteRenderer>();
     }
 
     private void Update()
@@ -50,19 +55,21 @@ public class PickupLogic : MonoBehaviour
         hover = false;
         transform.parent = newParent;
         transform.localPosition = Vector3.zero;
-
+        proximityCollider.enabled = false;
+        this.sr.sortingLayerName = "Held";
         FindObjectOfType<AudioManager>().play("Item Pick Up"); 
     }
 
-    public void onDropped(Vector3 position)
+    public void OnDropped(Vector3 position)
     {
-        transform.parent = null; // pickups_holder
+        transform.parent = LevelManager.instance.pickupsHolder;
         transform.position = position;
         initLocalPos = transform.localPosition;
         transform.localScale = initLocalScale;
         hover = true;
+        proximityCollider.enabled = true;
         if (this.PickupType == PType.WEAPON) transform.rotation = Quaternion.identity;
-
+        this.sr.sortingLayerName = "Entities";
         FindObjectOfType<AudioManager>().play("Item Throw");
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class KnifeAttackPointLogic : MonoBehaviour
@@ -21,6 +19,10 @@ public class KnifeAttackPointLogic : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag(holderTag)) return;
+        if (collision.gameObject.layer == LevelManager.instance.LAYER_VULNERABLE)
+        {
+            collision.GetComponentInParent<CharacterScript>().TakeDamage(10);
+        }
         Debug.Log("Knife hit: " + collision.transform.parent.name);
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletLogic : MonoBehaviour
@@ -47,30 +45,22 @@ public class BulletLogic : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (unfired || collision.collider.CompareTag(shooter.tag)) return;
-        Debug.Log("Bullet hit: " + collision.collider.tag);
-
-        Destroy(gameObject);
-
-        /*if (collision.collider.CompareTag("Player"))
-        {
-            LevelManager.instance.player.Damage(damage);
-        }
-        else if (collision.collider.CompareTag("EnemyTurret"))
-        {
-            collision.collider.GetComponent<EnemyTurretLogic>().Damage(damage);
-        }
-        else
-        {
-            // on hitting wall
-            SceneManager2.instance.sfxPlayer.Play("bullet_hit_platform");
-        }*/
+        ResolveHit(collision.collider);
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
+        ResolveHit(collider);
+    }
+
+    private void ResolveHit(Collider2D collider)
+    {
         if (unfired || collider.CompareTag(shooter.tag)) return;
-        Debug.Log("Bullet hit: " + collider.tag);
+        if (collider.gameObject.layer == LevelManager.instance.LAYER_VULNERABLE)
+        {
+            collider.GetComponentInParent<CharacterScript>().TakeDamage(damage);
+        }
+        Debug.Log("Bullet hit: " + collider.transform.parent.name);
         Destroy(gameObject);
     }
 }
