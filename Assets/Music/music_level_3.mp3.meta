@@ -1,9 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
+guid: 676f107ea25a53746913cfbf239b4688
+=======
 <<<<<<<< HEAD:Assets/Music/Background/Normal/music_level_3.mp3.meta
 guid: d6aa7d1ca7120d846b128711caebff2e
 ========
 guid: 9f8fe3cae2b45bc499889a310f28c4bd
 >>>>>>>> main:Assets/Music/Background/Normal/music_level_1.mp3.meta
+>>>>>>> main
 AudioImporter:
   externalObjects: {}
   serializedVersion: 6

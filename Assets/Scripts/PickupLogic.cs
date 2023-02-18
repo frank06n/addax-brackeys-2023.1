@@ -49,6 +49,6 @@ public class PickupLogic : MonoBehaviour
         proximityCollider.enabled = true;
         if (this.PickupType == PType.WEAPON) transform.rotation = Quaternion.identity;
         this.sr.sortingLayerName = "Entities";
-        LevelManager.instance.audioPlayer.Play("sfx_item_throw");
+        LevelManager.instance.audioPlayer.Play("sfx_item_drop");
     }
 }

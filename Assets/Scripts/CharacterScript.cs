@@ -39,7 +39,8 @@ public abstract class CharacterScript : MonoBehaviour
     protected abstract void OnWeaponPause();
     protected abstract void OnUpdate();
 
-    protected abstract void OnDeath();
+    protected virtual void OnDeath() { }
+    protected virtual void OnUnkillDone() { }
 
     public virtual void TakeDamage(float damage)
     {
@@ -57,7 +58,10 @@ public abstract class CharacterScript : MonoBehaviour
         {
             sfxToPlay = rsfx_Hit;
             if (health == 0) sfxToPlay = rsfx_Death;
-            health += damage;
+            if (health != maxHealth && (health += damage) >= maxHealth)
+            {
+                OnUnkillDone();
+            }
         }
         health = Mathf.Clamp(health, 0, maxHealth);
         LevelManager.instance.audioPlayer.Play(sfxToPlay);

@@ -1,0 +1,26 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Music/sfx_shoot.ogg.meta
+guid: c62fdaeaed822064faee09523c67dbc1
+========
+guid: a42525c92a367254ba78377dd7ee06a3
+>>>>>>>> main:Assets/Music/music_distorted_prewarp.mp3.meta
+AudioImporter:
+  externalObjects: {}
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 0
+    sampleRateSetting: 0
+    sampleRateOverride: 44100
+    compressionFormat: 1
+    quality: 1
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  normalize: 1
+  preloadAudioData: 1
+  loadInBackground: 0
+  ambisonic: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

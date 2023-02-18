@@ -5,6 +5,7 @@ public class PlayerMovement : CharacterScript
 {
     private List<PickupLogic> pickupsAround;
     private bool furnaceAround;
+    private bool atDoor;
 
     protected override void Awake()
     {
@@ -68,6 +69,13 @@ public class PlayerMovement : CharacterScript
     {
         ThrowHeld();
         if (pickupsAround.Count > 0) PickupObject(pickupsAround[0]);
+        bool showAmmo = false;
+        if (GetWeapon() != null && GetWeapon().GetWeaponType() == WeaponType.RANGED) 
+        {
+            showAmmo = true;
+            LevelManager.instance.SetAmmoGun((GunLogic)GetWeapon());
+        }
+        LevelManager.instance.ShowAmmo(showAmmo);
     }
     
     private void OnTriggerEnter2D(Collider2D collision)
@@ -80,6 +88,10 @@ public class PlayerMovement : CharacterScript
         {
             furnaceAround = true;
         }
+        if (collision.CompareTag("Door"))
+        {
+            atDoor = true;
+        }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -90,6 +102,10 @@ public class PlayerMovement : CharacterScript
         if (collision.CompareTag("Furnace"))
         {
             furnaceAround = false;
+        }
+        if (collision.CompareTag("Door"))
+        {
+            atDoor = false;
         }
     }
 }

@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Music/Background/Normal/music_level_5.mp3.meta
-guid: 965f11d1c698e4143b9a9b734aa2ab77
-========
-guid: 16a5a91fe00440a4eb004363ba3ed679
->>>>>>>> main:Assets/Music/Background/Normal/music_level_4.mp3.meta
+guid: e51f90b9e385af04496e9238f6946b18
 AudioImporter:
   externalObjects: {}
   serializedVersion: 6

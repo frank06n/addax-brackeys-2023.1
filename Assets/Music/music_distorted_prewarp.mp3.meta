@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Music/sfx_shoot.ogg.meta
+guid: cab72fa3327a2024bbd8278b180c0d2d
+========
 guid: a42525c92a367254ba78377dd7ee06a3
+>>>>>>>> main:Assets/Music/music_distorted_prewarp.mp3.meta
 AudioImporter:
   externalObjects: {}
   serializedVersion: 6
