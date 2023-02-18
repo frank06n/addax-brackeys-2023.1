@@ -25,9 +25,8 @@ public class LevelManager : MonoBehaviour
 
     [Header("UI Elements")]
 
-    [SerializeField] private RectTransform panelObjs; // Objectives Panel
-    private bool panelObjs_Animating;
-    private bool panelObjs_Visible;
+    private ObjectivesHandler objsHandler;
+    private HintHandler hintHandler;
 
     [SerializeField] private RectTransform playerHealthFill;
 
@@ -37,8 +36,8 @@ public class LevelManager : MonoBehaviour
 
         instance = this;
 
-        panelObjs_Animating = false;
-        panelObjs_Visible = false;
+        objsHandler = FindObjectOfType<ObjectivesHandler>();
+        hintHandler = FindObjectOfType<HintHandler>();
 
         LAYER_VULNERABLE = LayerMask.NameToLayer("Vulnerable");
     }
@@ -50,39 +49,19 @@ public class LevelManager : MonoBehaviour
 
     public void ToggleObjectivesPanel()
     {
-        if (panelObjs_Animating) return;
-        StartCoroutine(AnimateObjectivesPanel(!panelObjs_Visible));
+        objsHandler.Toggle();
     }
 
-    public bool IsObjectivesPanelVisible()
+    public void ShowHint(string text, float duration=3f)
     {
-        return panelObjs_Visible;
-    } 
+        hintHandler.ShowHint(text, duration);
+    }
 
     public RaycastHit2D UnFireRaycast(Vector2 origin, Vector2 direction, string shooterTag)
     {
         int i = shooterTag == "Player" ? 0 : 1;
         return Physics2D.Raycast(origin, direction, 50,
             raycastLayers, raycastMinDepths[i], raycastMaxDepths[i]);
-    }
-
-    private IEnumerator AnimateObjectivesPanel(bool show)
-    {
-        panelObjs_Animating = true;
-        float animProgress = 0f;
-
-        const float ANIM_DURATION = 0.25f;
-        float PANEL_Y = panelObjs.anchoredPosition.y;
-
-        while (animProgress <= 1f)
-        {
-            float x = show ? Mathf.Lerp(300, -10, animProgress) : Mathf.Lerp(-10, 300, animProgress);
-            panelObjs.anchoredPosition = new Vector2(x, PANEL_Y);
-            animProgress += Time.deltaTime / ANIM_DURATION;
-            yield return null;
-        }
-        panelObjs_Animating = false;
-        panelObjs_Visible = show;
     }
     
     public void SetPlayerHealthFill(float fill)
