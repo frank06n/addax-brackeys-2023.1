@@ -24,6 +24,7 @@ public class KnifeLogic : WeaponLogic
     {
         if (attacking) return;
         StartCoroutine(AttackAnim());
+        FindObjectOfType<AudioManager>().play("Knife");
     }
     public override void UnAttack()
     {

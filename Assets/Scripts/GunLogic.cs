@@ -26,7 +26,7 @@ public class GunLogic : WeaponLogic
         BulletLogic bullet = bulletObj.GetComponent<BulletLogic>();
         bullet.Initialise(BulletDamage, speed, holder);
 
-        //SceneManager2.instance.sfxPlayer.Play(BulletFireSfx);
+        FindObjectOfType<AudioManager>().play("Shoot");
     }
     public override void UnAttack()
     {
