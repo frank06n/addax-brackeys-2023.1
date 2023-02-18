@@ -31,11 +31,15 @@ public class EnemyMovement : CharacterScript
         if (patrolPoints.Length > 1)
             patrol = new Patrol(patrolPoints, patrolSlowdownFactor, patrolWaitTime);
 
-        GameObject gun = Instantiate(spawnWeapon, null);
-        PickupObject(gun.GetComponent<PickupLogic>());
         healthBar = GetComponentInChildren<HealthBarScript>();
 
         attackDelta = 0;
+    }
+
+    private void Start()
+    {
+        GameObject gun = Instantiate(spawnWeapon, null);
+        PickupObject(gun.GetComponent<PickupLogic>());
     }
 
     protected override void OnUpdate()
