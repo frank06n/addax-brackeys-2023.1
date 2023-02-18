@@ -99,6 +99,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 4
   maxHealth: 100
+  spr_Death: {fileID: 21300000, guid: 32586a507788cb64ebcaacc4ba1b19ca, type: 3}
+  spr_Stand: {fileID: 21300000, guid: 7650b9dc7d5c7a64481842696f42646e, type: 3}
+  spr_Walk: []
   state: 1
   spawnWeapon: {fileID: 3505009002278725415, guid: 63a173aaa35f53949ad08b2fb92ad419, type: 3}
   chasePlayer: 0

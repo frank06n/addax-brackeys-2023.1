@@ -21,11 +21,9 @@ public class PlayerMovement : CharacterScript
             GetWeapon().LookTowards(mousePosition, false);
 
             if (Input.GetMouseButtonDown(0)) GetWeapon().Attack();
-            if (Input.GetMouseButtonDown(1)) GetWeapon().UnAttack();
         }
 
-        if (Input.GetKeyDown(KeyCode.E)) PickupObject();
-        if (Input.GetKeyDown(KeyCode.F)) ThrowHeld();
+        PickupOrThrow();
         if (Input.GetKeyDown(KeyCode.LeftShift)) LevelManager.instance.ToggleObjectivesPanel();
         if (Input.GetKeyDown(KeyCode.Space) && furnaceAround)
             LevelManager.instance.FurnaceInteract();
@@ -39,17 +37,32 @@ public class PlayerMovement : CharacterScript
         else if (Input.GetKey(KeyCode.S)) direction.y = -1;
         return direction.normalized;
     }
-    protected override void OnWeaponPause()
+    protected override void OnWeaponPause(){}
+
+    private void PickupOrThrow()
     {
-        // do a camera effect
+        int i = 0;
+        if (Input.GetKeyDown(KeyCode.E)) i = +1;
+        else if (Input.GetKeyDown(KeyCode.F)) i = -1;
+
+        if (LevelManager.instance.IsReverse()) i *= -1;
+
+        if (i == 1) PickupObject();
+        else if (i == -1) ThrowHeld();
+    }
+
+    public void OnFurnaceProcessComplete()
+    {
+        
     }
     
     public override void TakeDamage(float damage)
     {
-        health -= damage;
-        if (health <= 0) health = 0;
+        base.TakeDamage(damage);
         LevelManager.instance.SetPlayerHealthFill(health / maxHealth);
     }
+
+    protected override void OnDeath() { }
 
     private void PickupObject()
     {

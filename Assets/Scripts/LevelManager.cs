@@ -5,6 +5,7 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
 
+    public Transform bulletsHolder;
     public Transform pickupsHolder;
     [SerializeField] private LayerMask raycastLayers;
     private readonly int[] raycastMinDepths = { 0, -5 };
@@ -15,6 +16,12 @@ public class LevelManager : MonoBehaviour
     [HideInInspector] public int LAYER_VULNERABLE;
 
     public AudioManager audioPlayer;
+
+
+
+    [SerializeField] private bool reverse;
+
+
 
     [Header("UI Elements")]
 
@@ -38,7 +45,7 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        audioPlayer.play("music_training");
+        audioPlayer.Play("music_training");
     }
 
     public void ToggleObjectivesPanel()
@@ -85,11 +92,27 @@ public class LevelManager : MonoBehaviour
         playerHealthFill.anchoredPosition = new Vector2(width * fill / 2, 0);
     }
 
+    public FurnaceState GetFurnaceState()
+    {
+        return furnace.GetState();
+    }
+
     public void FurnaceInteract()
     {
-        if (this.furnace)
-        {
-            this.furnace.NextState();
-        }
+        if (!furnace) return;
+        if (reverse)
+            furnace.PrevState();
+        else
+            furnace.NextState();
+    }
+
+    public bool IsReverse()
+    {
+        return reverse;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R)) reverse = !reverse;
     }
 }

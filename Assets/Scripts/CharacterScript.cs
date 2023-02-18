@@ -6,6 +6,17 @@ public abstract class CharacterScript : MonoBehaviour
     [SerializeField] protected float maxHealth;
     protected float health;
 
+    [SerializeField] private Sprite spr_Death;
+    [SerializeField] private Sprite spr_Stand;
+    [SerializeField] private Sprite[] spr_Walk;
+    private int currentSpr_Ix;
+
+
+    [SerializeField] private string sfx_Hit;
+    [SerializeField] private string rsfx_Hit;
+    [SerializeField] private string sfx_Death;
+    [SerializeField] private string rsfx_Death;
+
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private new Collider2D collider;
@@ -28,10 +39,34 @@ public abstract class CharacterScript : MonoBehaviour
     protected abstract void OnWeaponPause();
     protected abstract void OnUpdate();
 
-    public abstract void TakeDamage(float damage);
+    protected abstract void OnDeath();
+
+    public virtual void TakeDamage(float damage)
+    {
+        string sfxToPlay = "";
+        if (!LevelManager.instance.IsReverse())
+        {
+            sfxToPlay = sfx_Hit;
+            if (health != 0 && (health -= damage) <= 0)
+            {
+                sfxToPlay = sfx_Death;
+                OnDeath();
+            }
+        }
+        else
+        {
+            sfxToPlay = rsfx_Hit;
+            if (health == 0) sfxToPlay = rsfx_Death;
+            health += damage;
+        }
+        health = Mathf.Clamp(health, 0, maxHealth);
+        LevelManager.instance.audioPlayer.Play(sfxToPlay);
+    }
 
     private void Update()
     {
+        ChooseSprite();
+
         if (weapon != null && weapon.RequiresPause())
         {
             rb.velocity = Vector2.zero;
@@ -45,6 +80,21 @@ public abstract class CharacterScript : MonoBehaviour
         if (baseVel.x != 0) sr.flipX = baseVel.x < 0;
 
         OnUpdate();
+    }
+
+    private void ChooseSprite()
+    {
+        if (health == 0)
+            sr.sprite = spr_Death;
+        else if (spr_Walk.Length == 0)
+            sr.sprite = spr_Stand;
+        else if (Vector2.SqrMagnitude(rb.velocity) == 0f)
+            sr.sprite = spr_Stand;
+        else
+        {
+            currentSpr_Ix = (currentSpr_Ix + 1) % spr_Walk.Length;
+            sr.sprite = spr_Walk[currentSpr_Ix];
+        }
     }
 
     protected PickupLogic GetHeldObject()

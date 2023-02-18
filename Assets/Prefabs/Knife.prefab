@@ -90,6 +90,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46334ee1414ecd84fa50d01dab68642e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackSfx: sfx_knife
+  unAttackSfx: sfx_knife
   attackDamage: 1
   attackSpeed: 5
   attackAnimCurve:

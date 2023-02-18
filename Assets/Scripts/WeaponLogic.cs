@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public enum WeaponType
@@ -17,13 +18,32 @@ public abstract class WeaponLogic : MonoBehaviour
             _holder = value;
         }
     }
-    
-    public abstract void Attack();
-    public abstract void UnAttack();
+    [SerializeField] private string attackSfx, unAttackSfx;
+
+    public void Attack()
+    {
+        if (LevelManager.instance.IsReverse())
+            _UnAttack();
+        else
+        {
+            _Attack();
+            LevelManager.instance.audioPlayer.Play(attackSfx);
+        }
+    }
+    protected abstract void _Attack();
+    protected abstract void _UnAttack();
     public abstract WeaponType GetWeaponType();
 
     public virtual bool RequiresPause() { return false; }
     protected virtual void OnHolderChanged(Collider2D old, Collider2D newt) { }
+
+    protected IEnumerator PlayUnAttackSfx(float ulife)
+    {
+        float sfxTime = LevelManager.instance.audioPlayer.Length(unAttackSfx);
+        //Debug.Log("play unattacksfx after " + (ulife - sfxTime));
+        yield return new WaitForSeconds(ulife - sfxTime);
+        LevelManager.instance.audioPlayer.Play(unAttackSfx);
+    }
 
     public void LookTowards(Vector2 position, bool inverted = false)
     {

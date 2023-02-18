@@ -61,12 +61,17 @@ MonoBehaviour:
     loop: 0
     source: {fileID: 0}
   - audioType: 0
-    clip: {fileID: 8300000, guid: cc429a855c7144340abd4e288f1a6709, type: 3}
+    clip: {fileID: 8300000, guid: 2af5ed2993f7a974a8be84431bd7d37f, type: 3}
     volume: 0.5
     loop: 0
     source: {fileID: 0}
   - audioType: 0
     clip: {fileID: 8300000, guid: 6fea06a1f584c4942862ca9155bd2a3e, type: 3}
+    volume: 0.5
+    loop: 0
+    source: {fileID: 0}
+  - audioType: 0
+    clip: {fileID: 8300000, guid: 717521acc350d7840986ab35ca7bed21, type: 3}
     volume: 0.5
     loop: 0
     source: {fileID: 0}

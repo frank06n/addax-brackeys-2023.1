@@ -18,7 +18,7 @@ public class BulletLogic : MonoBehaviour
 
         unfired = false;
     }
-    public void Initialise(float damage, Vector2 direction, float speed, Collider2D shooter, Vector2 endPoint, Action onUnfireComplete)
+    public void Initialise(float damage, Vector2 direction, float speed, Collider2D shooter, Vector2 endPoint, Action onUnfireComplete, Collider2D unfireTarget)
     {
         this.damage = damage;
         GetComponent<Rigidbody2D>().velocity = direction * speed;
@@ -27,12 +27,16 @@ public class BulletLogic : MonoBehaviour
 
         unfired = true;
         ulife = Vector2.Distance(transform.position, endPoint) / speed;
-        Physics2D.IgnoreCollision(GetComponent<Collider2D>(), shooter);
+        ResolveHit(unfireTarget, true);
+    }
 
+    public float GetLifetime()
+    {
+        return ulife;
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (!unfired) return;
         ulife -= Time.deltaTime;
@@ -53,14 +57,15 @@ public class BulletLogic : MonoBehaviour
         ResolveHit(collider);
     }
 
-    private void ResolveHit(Collider2D collider)
+    private void ResolveHit(Collider2D collider, bool forUnfire=false)
     {
-        if (unfired || collider.CompareTag(shooter.tag)) return;
+        if (unfired != forUnfire) return;
+        if (collider.CompareTag(shooter.tag)) return;
+
         if (collider.gameObject.layer == LevelManager.instance.LAYER_VULNERABLE)
         {
             collider.GetComponentInParent<CharacterScript>().TakeDamage(damage);
         }
-        Debug.Log("Bullet hit: " + collider.transform.parent.name);
-        Destroy(gameObject);
+        if (!forUnfire) Destroy(gameObject);
     }
 }

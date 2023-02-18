@@ -48,6 +48,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dca2f7d21646ae64fa051d222db46323, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackSfx: sfx_shoot
+  unAttackSfx: rsfx_shoot
   BulletDamage: 10
   BulletSpeed: 15
   BulletPrefab: {fileID: 2717687023082620174, guid: e81abc4640c7bcd45a7dffcc2ebf339a, type: 3}

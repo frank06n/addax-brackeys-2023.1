@@ -129,6 +129,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 6
   maxHealth: 100
+  spr_Death: {fileID: 21300000, guid: 32586a507788cb64ebcaacc4ba1b19ca, type: 3}
+  spr_Stand: {fileID: 21300000, guid: 7650b9dc7d5c7a64481842696f42646e, type: 3}
+  spr_Walk: []
 --- !u!210 &2233195964892668590
 SortingGroup:
   m_ObjectHideFlags: 0

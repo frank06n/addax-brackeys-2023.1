@@ -15,36 +15,27 @@ public class GunLogic : WeaponLogic
         BulletPoint = transform.GetChild(1);
     }
 
-    protected virtual void OnAwake() { }
-
-    public override void Attack()
+    protected override void _Attack()
     {
         Vector2 speed = (BulletPoint.position - transform.position).normalized * BulletSpeed;
         GameObject bulletObj = Instantiate(BulletPrefab, BulletPoint.position, transform.rotation, transform);
-        bulletObj.transform.parent = null;// LevelManager.instance.BulletsHolder;
+        bulletObj.transform.parent = LevelManager.instance.bulletsHolder;
 
         BulletLogic bullet = bulletObj.GetComponent<BulletLogic>();
         bullet.Initialise(BulletDamage, speed, holder);
-
-        LevelManager.instance.audioPlayer.play("sfx_shoot");
     }
-    public override void UnAttack()
+    protected override void _UnAttack()
     {
         Vector2 direction = (BulletPoint.position - transform.position).normalized;
-        //RaycastHit2D pt = Physics2D.Raycast(BulletPoint.position, direction, 50, LevelManager.instance.raycastLayers, -10, 0);
         RaycastHit2D pt = LevelManager.instance.UnFireRaycast(BulletPoint.position, direction, holder.tag);
 
         GameObject bulletObj = Instantiate(BulletPrefab, pt.point, transform.rotation, transform);
-        bulletObj.transform.parent = null;// LevelManager.instance.BulletsHolder;
+        bulletObj.transform.parent = LevelManager.instance.bulletsHolder;
 
         BulletLogic bullet = bulletObj.GetComponent<BulletLogic>();
-        bullet.Initialise(BulletDamage, -direction, BulletSpeed, holder, BulletPoint.position, () =>
-        {
-            this.unfiring = false;
-        });
-        this.unfiring = true;
-
-        //SceneManager2.instance.sfxPlayer.Play(BulletFireSfx);
+        bullet.Initialise(BulletDamage, -direction, BulletSpeed, holder, BulletPoint.position, () => unfiring = false, pt.collider);
+        unfiring = true;
+        StartCoroutine(PlayUnAttackSfx(bullet.GetLifetime()));
     }
 
     public override bool RequiresPause()

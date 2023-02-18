@@ -11,7 +11,6 @@ public class KnifeLogic : WeaponLogic
     private bool attacking;
     private KnifeAttackPointLogic attackPoint;
 
-    //[SerializeField] protected string BulletFireSfx;
 
     private void Awake()
     {
@@ -20,15 +19,14 @@ public class KnifeLogic : WeaponLogic
         attackPoint.gameObject.SetActive(false);
     }
 
-    public override void Attack()
+    protected override void _Attack()
     {
         if (attacking) return;
         StartCoroutine(AttackAnim());
-        LevelManager.instance.audioPlayer.play("sfx_knife");
     }
-    public override void UnAttack()
+    protected override void _UnAttack()
     {
-        
+        _Attack();
     }
     private IEnumerator AttackAnim()
     {
@@ -55,6 +53,6 @@ public class KnifeLogic : WeaponLogic
 
     public override WeaponType GetWeaponType()
     {
-        return WeaponType.RANGED;
+        return WeaponType.MELEE;
     }
 }

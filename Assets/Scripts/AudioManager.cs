@@ -71,14 +71,20 @@ public class AudioManager : MonoBehaviour {
         return s.source;
     }
 
-    public void play (string name) {
+    public void Play(string name) {
         AudioSource s = GetSource(name);
         if (s) s.Play();
     }
 
-    public void stop(string name)
+    public void Stop(string name)
     {
         AudioSource s = GetSource(name);
         if (s) s.Stop();
+    }
+
+    public float Length(string name)
+    {
+        AudioSource s = GetSource(name);
+        return s ? s.clip.length : 0f;
     }
 }

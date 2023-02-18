@@ -26,7 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3505009002278725415}
-  m_LocalRotation: {x: -0, y: -0, z: -0.0041888487, w: 0.9999913}
+  m_LocalRotation: {x: 0, y: 0, z: -0.0041888487, w: 0.9999913}
   m_LocalPosition: {x: -3.28, y: 2.392, z: 1}
   m_LocalScale: {x: 4.32, y: 4.32, z: 1}
   m_ConstrainProportionsScale: 0
@@ -48,6 +48,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dca2f7d21646ae64fa051d222db46323, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackSfx: sfx_knife
+  unAttackSfx: sfx_knife
   BulletDamage: 10
   BulletSpeed: 15
   BulletPrefab: {fileID: 2717687023082620174, guid: e20844cfa82cd9243907f9830680cc72, type: 3}
