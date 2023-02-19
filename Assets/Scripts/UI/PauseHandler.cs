@@ -35,15 +35,18 @@ public class PauseHandler : MonoBehaviour
         gameplayUI.SetActive(true);
         Time.timeScale = 1f;
         isPaused = false;
+        LevelManager.instance.audioPlayer.Play("sfx_enterGame");
     }
 
     public void restart(){
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         Time.timeScale = 1f;
+        LevelManager.instance.audioPlayer.Play("sfx_enterGame");
     }
 
     public void exit(){
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
+        LevelManager.instance.audioPlayer.Play("sfx_warning");
     }
 }
