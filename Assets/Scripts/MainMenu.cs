@@ -8,6 +8,10 @@ public class MainMenu : MonoBehaviour
 {   
     public TMPro.TMP_Text trainingText;
 
+    void Start(){
+        LevelManager.instance.audioPlayer.Play("music_mainMenu");
+    }
+
     public void playGame() {
         if(PlayerPrefs.GetInt("hasPlayedTraining") == 1) {
             Debug.Log("Has played training and may start the game.");
