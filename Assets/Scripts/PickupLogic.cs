@@ -4,7 +4,7 @@ public class PickupLogic : MonoBehaviour
 {   
     public enum PType
     {
-        MAP, WEAPON
+        WEAPON, MAP, SC_METAL, SC_WOOD, KEY, TRASH
     };
 
     [SerializeField] private PType PickupType;

@@ -87,6 +87,7 @@ public class PlayerMovement : CharacterScript
         if (collision.CompareTag("Furnace"))
         {
             furnaceAround = true;
+            LevelManager.instance.ShowHint("Press 'Space' to interact with Forge");
         }
         if (collision.CompareTag("Door"))
         {

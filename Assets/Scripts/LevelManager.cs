@@ -12,7 +12,7 @@ public class LevelManager : MonoBehaviour
     private readonly int[] raycastMaxDepths = { 5,  0 };
 
     public Transform player;
-    [SerializeField] private FurnaceLogic furnace;
+    private FurnaceLogic furnace;
     [HideInInspector] public int LAYER_VULNERABLE;
 
     public AudioManager audioPlayer;
@@ -44,6 +44,8 @@ public class LevelManager : MonoBehaviour
         ammoDisplay = FindObjectOfType<AmmoDisplayHandler>();
 
         LAYER_VULNERABLE = LayerMask.NameToLayer("Vulnerable");
+
+        furnace = FindObjectOfType<FurnaceLogic>();
     }
 
     private void Start()

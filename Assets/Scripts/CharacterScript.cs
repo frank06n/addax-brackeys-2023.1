@@ -10,6 +10,7 @@ public abstract class CharacterScript : MonoBehaviour
     [SerializeField] private Sprite spr_Stand;
     [SerializeField] private Sprite[] spr_Walk;
     private int currentSpr_Ix;
+    private float nextSpr_delta;
 
 
     [SerializeField] private string sfx_Hit;
@@ -96,7 +97,12 @@ public abstract class CharacterScript : MonoBehaviour
             sr.sprite = spr_Stand;
         else
         {
-            currentSpr_Ix = (currentSpr_Ix + 1) % spr_Walk.Length;
+            nextSpr_delta += Time.deltaTime * 4f;
+            if (nextSpr_delta>=1)
+            {
+                nextSpr_delta = 0;
+                currentSpr_Ix = (currentSpr_Ix + 1) % spr_Walk.Length;
+            }
             sr.sprite = spr_Walk[currentSpr_Ix];
         }
     }
