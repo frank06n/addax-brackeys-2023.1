@@ -15,20 +15,21 @@ public class MainMenu : MonoBehaviour
 
     public void playGame() {
         audioPlayer.Play("sfx_enterGame");
-        if(PlayerPrefs.GetInt("hasPlayedTraining") == 1) {
-            Debug.Log("Has played training and may start the game.");
-            //SceneManager.LoadScene(LevelSceneNameGoesHere);
-        } else {
-            Debug.Log("Must play training before starting the game.");
-            trainingText.text = "You must play training before starting the game.";
-        }
+        //if(PlayerPrefs.GetInt("hasPlayedTraining") == 1) {
+        //    Debug.Log("Has played training and may start the game.");
+
+        //} else {
+        //    Debug.Log("Must play training before starting the game.");
+        //    trainingText.text = "You must play training before starting the game.";
+        //}
+        SceneManager.LoadScene(1);
     }
 
     public void playTraining() {
-        audioPlayer.Play("sfx_enterGame");
-        Debug.Log("Training");
-        PlayerPrefs.SetInt("hasPlayedTraining", 1);
-        //SceneManager.LoadScene(TrainingSceneNameGoesHere);
+        //audioPlayer.Play("sfx_enterGame");
+        //Debug.Log("Training");
+        //PlayerPrefs.SetInt("hasPlayedTraining", 1);
+        ////SceneManager.LoadScene(TrainingSceneNameGoesHere);
     }
 
     public void quitGame(){

@@ -28,6 +28,8 @@ public class ShogunEffect : MonoBehaviour
     [Range(0f, 1f)]
     private float verticalJump;
 
+    bool off;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -41,14 +43,30 @@ public class ShogunEffect : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (off)
+        {
+
+        }
+        
         transform.position = startPos + Vector3.right * variance * Random.Range(-1f, 1f);
         float dist = Vector2.Distance(startPos, LevelManager.instance.player.position);
         float p = 1f - Mathf.Clamp01(Mathf.Atan(dist / 5));
+
+        if (off)
+        {
+            GetComponentInChildren<SpriteRenderer>().color = Color.clear;
+            p = 0;
+        }
 
         dg.intensity = p * dig_intensity;
         ag.colorDrift = p * colorDrift;
         ag.horizontalShake = p * horizontalShake;
         ag.scanLineJitter = p * scanLineJitter;
         ag.verticalJump = p * verticalJump;
+    }
+
+    public void turnOff()
+    {
+        off = true;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
@@ -19,16 +20,16 @@ public class LevelManager : MonoBehaviour
 
 
 
-    [SerializeField] private bool reverse;
+    [HideInInspector] public bool reverse;
 
 
 
     [Header("UI Elements")]
 
-    private ObjectivesHandler objsHandler;
+    public ObjectivesHandler objsHandler;
     private HintHandler hintHandler;
-    private TimerHandler timerHandler;
-    private AmmoDisplayHandler ammoDisplay;
+    public TimerHandler timerHandler;
+    public AmmoDisplayHandler ammoDisplay;
 
     [SerializeField] private RectTransform playerHealthFill;
 
@@ -44,13 +45,6 @@ public class LevelManager : MonoBehaviour
         ammoDisplay = FindObjectOfType<AmmoDisplayHandler>();
 
         LAYER_VULNERABLE = LayerMask.NameToLayer("Vulnerable");
-    }
-
-    private void Start()
-    {
-        audioPlayer.Play("music_training");
-        ShowHint("Play this game properly");
-        timerHandler.time = 100;
     }
 
     public void ToggleObjectivesPanel()
@@ -106,8 +100,8 @@ public class LevelManager : MonoBehaviour
         return reverse;
     }
 
-    private void Update()
+    public void GotoMainMenu()
     {
-        if (Input.GetKeyDown(KeyCode.R)) reverse = !reverse;
+        SceneManager.LoadScene(0);
     }
 }

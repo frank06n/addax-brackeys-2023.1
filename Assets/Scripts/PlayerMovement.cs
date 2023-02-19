@@ -14,6 +14,13 @@ public class PlayerMovement : CharacterScript
         furnaceAround = false;
     }
 
+
+    private void Start()
+    {
+        TakeDamage(maxHealth - 10);
+        LevelManager.instance.SetPlayerHealthFill(0);
+    }
+
     protected override void OnUpdate()
     {
         if (GetWeapon() != null)
@@ -42,14 +49,8 @@ public class PlayerMovement : CharacterScript
 
     private void PickupOrThrow()
     {
-        int i = 0;
-        if (Input.GetKeyDown(KeyCode.E)) i = +1;
-        else if (Input.GetKeyDown(KeyCode.F)) i = -1;
-
-        if (LevelManager.instance.IsReverse()) i *= -1;
-
-        if (i == 1) PickupObject();
-        else if (i == -1) ThrowHeld();
+        if (Input.GetKeyDown(KeyCode.E)) PickupObject();
+        else if (Input.GetKeyDown(KeyCode.F)) ThrowHeld();
     }
 
     public void OnFurnaceProcessComplete()
@@ -63,7 +64,10 @@ public class PlayerMovement : CharacterScript
         LevelManager.instance.SetPlayerHealthFill(health / maxHealth);
     }
 
-    protected override void OnDeath() { }
+    protected override void OnDeath() {
+
+        LevelManager.instance.GotoMainMenu();
+    }
 
     private void PickupObject()
     {

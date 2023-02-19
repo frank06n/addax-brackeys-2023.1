@@ -4,7 +4,7 @@ public abstract class CharacterScript : MonoBehaviour
 {
     [SerializeField] protected float speed;
     [SerializeField] protected float maxHealth;
-    protected float health;
+    [HideInInspector] public float health;
 
     [SerializeField] private Sprite spr_Death;
     [SerializeField] private Sprite spr_Stand;
@@ -135,5 +135,14 @@ public abstract class CharacterScript : MonoBehaviour
             weapon = heldObject.GetComponent<WeaponLogic>();
             weapon.holder = collider;
         }
+    }
+
+    public bool IsHealthFull()
+    {
+        return this.health == this.maxHealth;
+    }
+    public bool IsDead()
+    {
+        return this.health == 0;
     }
 }

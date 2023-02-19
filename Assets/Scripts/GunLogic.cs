@@ -20,7 +20,7 @@ public class GunLogic : WeaponLogic
     private void Awake()
     {
         BulletPoint = transform.GetChild(1);
-        Ammo = MaxAmmo;
+        Ammo = 0;
     }
 
     protected override void _Attack()
