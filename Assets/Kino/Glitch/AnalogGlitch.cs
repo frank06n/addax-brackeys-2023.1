@@ -89,6 +89,8 @@ namespace Kino
         {
             if (_material == null)
             {
+                if (_shader == null) _shader = Shader.Find("Hidden/Kino/Glitch/Analog");
+
                 _material = new Material(_shader);
                 _material.hideFlags = HideFlags.DontSave;
             }

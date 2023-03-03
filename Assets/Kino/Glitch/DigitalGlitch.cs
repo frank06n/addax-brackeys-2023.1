@@ -62,6 +62,7 @@ namespace Kino
         void SetUpResources()
         {
             if (_material != null) return;
+            if (_shader == null) _shader = Shader.Find("Hidden/Kino/Glitch/Digital");
 
             _material = new Material(_shader);
             _material.hideFlags = HideFlags.DontSave;

@@ -17,7 +17,7 @@ public class MainMenu : MonoBehaviour
         audioPlayer.Play("sfx_enterGame");
         if(PlayerPrefs.GetInt("hasPlayedTraining") == 1) {
             Debug.Log("Has played training and may start the game.");
-            //SceneManager.LoadScene(LevelSceneNameGoesHere);
+            SceneManager.LoadScene(1);
         } else {
             Debug.Log("Must play training before starting the game.");
             trainingText.text = "You must play training before starting the game.";
