@@ -5,15 +5,14 @@ using TMPro;
 public class AmmoDisplayHandler : MonoBehaviour
 {
     private TextMeshProUGUI textbox;
-    private GunLogic gun;
     private int ammo, maxAmmo;
+    private GunLogic gun;
 
     private void Awake()
     {
         textbox = GetComponentInChildren<TextMeshProUGUI>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         textbox.text = $"{ammo} / {maxAmmo}";
@@ -21,13 +20,16 @@ public class AmmoDisplayHandler : MonoBehaviour
 
     public void SetGun(GunLogic gun)
     {
-        if (this.gun != null && this.gun != gun) throw new InvalidOperationException();
-        if (this.gun == gun) return;
-        this.gun = gun;
-        this.gun.OnAmmoUpdate = (ammo, maxAmmo) =>
+        if (this.gun != null && this.gun != gun)
         {
-            this.ammo = ammo;
-            this.maxAmmo = maxAmmo;
+            this.gun.OnAmmoUpdate = null;
+        }
+        this.gun = gun;
+        this.gun.OnAmmoUpdate = () =>
+        {
+            this.ammo = this.gun.GetAmmo();
+            this.maxAmmo = this.gun.GetMaxAmmo();
         };
+        this.gun.OnAmmoUpdate();
     }
 }

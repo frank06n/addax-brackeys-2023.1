@@ -6,10 +6,8 @@ public abstract class CharacterScript : MonoBehaviour
     [SerializeField] protected float maxHealth;
     protected float health;
 
-    [SerializeField] private Sprite spr_Death;
-    [SerializeField] private Sprite spr_Stand;
-    [SerializeField] private Sprite[] spr_Walk;
-    private int currentSpr_Ix;
+    [SerializeField] private Sprite spr_Dead;
+    [SerializeField] private Sprite spr_Alive;
 
 
     [SerializeField] private string sfx_Hit;
@@ -39,8 +37,13 @@ public abstract class CharacterScript : MonoBehaviour
     protected abstract void OnWeaponPause();
     protected abstract void OnUpdate();
 
-    protected virtual void OnDeath() { }
-    protected virtual void OnUnkillDone() { }
+    protected virtual void OnDeath() {
+        sr.sprite = spr_Dead;
+    }
+    protected virtual void OnUnkillDone()
+    {
+        sr.sprite = spr_Alive;
+    }
 
     public virtual void TakeDamage(float damage)
     {
@@ -69,8 +72,6 @@ public abstract class CharacterScript : MonoBehaviour
 
     private void Update()
     {
-        ChooseSprite();
-
         if (weapon != null && weapon.RequiresPause())
         {
             rb.velocity = Vector2.zero;
@@ -86,26 +87,11 @@ public abstract class CharacterScript : MonoBehaviour
         OnUpdate();
     }
 
-    private void ChooseSprite()
-    {
-        if (health == 0)
-            sr.sprite = spr_Death;
-        else if (spr_Walk.Length == 0)
-            sr.sprite = spr_Stand;
-        else if (Vector2.SqrMagnitude(rb.velocity) == 0f)
-            sr.sprite = spr_Stand;
-        else
-        {
-            currentSpr_Ix = (currentSpr_Ix + 1) % spr_Walk.Length;
-            sr.sprite = spr_Walk[currentSpr_Ix];
-        }
-    }
-
     protected PickupLogic GetHeldObject()
     {
         return this.heldObject;
     }
-    protected WeaponLogic GetWeapon()
+    public WeaponLogic GetWeapon()
     {
         return this.weapon;
     }

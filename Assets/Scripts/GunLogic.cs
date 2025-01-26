@@ -9,7 +9,7 @@ public class GunLogic : WeaponLogic
     private int Ammo;
     [SerializeField] private int MaxAmmo;
 
-    public Action<int, int> OnAmmoUpdate;
+    public Action OnAmmoUpdate;
     
 
     public GameObject BulletPrefab;
@@ -38,8 +38,9 @@ public class GunLogic : WeaponLogic
 
         BulletLogic bullet = bulletObj.GetComponent<BulletLogic>();
         bullet.Initialise(BulletDamage, speed, holder);
+        Ammo--;
 
-        if (OnAmmoUpdate != null) OnAmmoUpdate(--Ammo, MaxAmmo);
+        if (OnAmmoUpdate != null) OnAmmoUpdate();
     }
     protected override void _UnAttack()
     {
@@ -61,7 +62,8 @@ public class GunLogic : WeaponLogic
         unfiring = true;
         StartCoroutine(PlayUnAttackSfx(bullet.GetLifetime()));
 
-        if (OnAmmoUpdate != null) OnAmmoUpdate(++Ammo, MaxAmmo);
+        Ammo++;
+        if (OnAmmoUpdate != null) OnAmmoUpdate();
     }
 
     public override bool RequiresPause()
@@ -72,5 +74,14 @@ public class GunLogic : WeaponLogic
     public override WeaponType GetWeaponType()
     {
         return WeaponType.RANGED;
+    }
+
+    public int GetAmmo()
+    {
+        return this.Ammo;
+    }
+    public int GetMaxAmmo()
+    {
+        return this.MaxAmmo;
     }
 }

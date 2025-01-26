@@ -24,7 +24,8 @@ public class PlayerMovement : CharacterScript
             if (Input.GetMouseButtonDown(0)) GetWeapon().Attack();
         }
 
-        PickupOrThrow();
+        if (Input.GetKeyDown(KeyCode.E)) PickupObject();
+        else if (Input.GetKeyDown(KeyCode.F)) ThrowHeld();
         if (Input.GetKeyDown(KeyCode.LeftShift)) LevelManager.instance.ToggleObjectivesPanel();
         if (Input.GetKeyDown(KeyCode.Space) && furnaceAround)
             LevelManager.instance.FurnaceInteract();
@@ -39,18 +40,6 @@ public class PlayerMovement : CharacterScript
         return direction.normalized;
     }
     protected override void OnWeaponPause(){}
-
-    private void PickupOrThrow()
-    {
-        int i = 0;
-        if (Input.GetKeyDown(KeyCode.E)) i = +1;
-        else if (Input.GetKeyDown(KeyCode.F)) i = -1;
-
-        if (LevelManager.instance.IsReverse()) i *= -1;
-
-        if (i == 1) PickupObject();
-        else if (i == -1) ThrowHeld();
-    }
 
     public void OnFurnaceProcessComplete()
     {
